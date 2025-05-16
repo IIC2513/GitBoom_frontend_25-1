@@ -5,19 +5,21 @@
 
 ## Descripción general :thought_balloon:
 
-- ¿De qué se tratará el proyecto?
+- **¿De qué se tratará el proyecto?**  
+
  REMeal será una plataforma web solidaria tipo marketplace sostenible donde cualquier usuario —personas, supermercados, restaurantes, panaderías, fábricas de alimentos, entre otros— podrá publicar alimentos que estén próximos a vencer, sobrantes o imperfectos.
  La plataforma tendrá dos grandes secciones. Una sección es la Compra Solidaria: donde se podrán vender estos productos a precios reducidos. Por su parte también existe la sección Ayuda Social: donde se podrán donar productos a costo cero a fundaciones, organizaciones sociales o personas interesadas..
 Adicionalmente, los productos que estén en venta pasarán automáticamente a la sección de Ayuda Social 24 horas antes de su vencimiento si no han sido vendidos, asegurando su rescate a tiempo.
 
-- ¿Cuál es el fin o la utilidad del proyecto?
+- **¿Cuál es el fin o la utilidad del proyecto?**  
+
 El proyecto REMeal busca reducir el desperdicio de alimentos en Chile, facilitando el acceso a productos asequibles o gratuitos para personas y organizaciones que lo necesiten. A través de su plataforma, se pretende crear una comunidad solidaria que incentive tanto la compra consciente como la ayuda social, fortaleciendo los lazos entre donantes y beneficiarios. Además, REMEAL permitirá visibilizar el impacto generado mediante métricas de alimentos salvados, donaciones realizadas y el reconocimiento a los usuarios más activos. De esta manera,con REMeal, la comida que antes se perdería podrá ser aprovechada, promoviendo un modelo de consumo más justo, sostenible y solidario.
 
-- ¿Quiénes son los usuarios objetivo de su aplicación?
-a) Personas particulares: que deseen donar, vender o comprar alimentos a precios justos.
-b) Comercios de alimentos: supermercados, restaurantes, panaderías, fábricas de alimentos que gestionen excedentes de forma responsable.
-c) Organizaciones sociales: fundaciones, hogares, comedores comunitarios que busquen alimentos en la sección de ayuda social.
-d) Equipo REMEAL: administradores encargados de validar usuarios, gestionar publicaciones y mantener el correcto funcionamiento de la plataforma.
+- **¿Quiénes son los usuarios objetivo de su aplicación?**  
+**a)** Personas particulares: que deseen donar, vender o comprar alimentos a precios justos.  
+**b)** Comercios de alimentos: supermercados, restaurantes, panaderías, fábricas de alimentos que gestionen excedentes de forma responsable.  
+**c)**Organizaciones sociales: fundaciones, hogares, comedores comunitarios que busquen alimentos en la sección de ayuda social.  
+**d)** Equipo REMEAL: administradores encargados de validar usuarios, gestionar publicaciones y mantener el correcto funcionamiento de la plataforma.  
 
 
 ## Historia de Usuarios :busts_in_silhouette:
@@ -55,7 +57,7 @@ d) Equipo REMEAL: administradores encargados de validar usuarios, gestionar publ
 4. Tipografía
 Usaremos la tipografía **Inter** como tipografía principal. 
 Con uso de distintos tamaños
-![Paleta de colores](assets/Inter.png)
+![Paleta de colores](assets/inter.png)
 
 
 <!-- Vistas principales -->
