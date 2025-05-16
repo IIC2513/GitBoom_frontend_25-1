@@ -62,9 +62,12 @@ Con uso de distintos tamaños
 
 <!-- Vistas principales -->
 ### :mag: Vistas principales
-![Paleta de colores](assets/Views/ResponsiveDesign1.png)
-![Paleta de colores](assets/Views/ResponsiveDesign2.png)
-![Paleta de colores](assets/Views/ResponsiveDesign3.png)
+1. Detalle Producto
+![Paleta de colores](assets/Views/DetalleProducto.png)
+2. Explorar Productos
+![Paleta de colores](assets/Views/ExploraciónProductos.png)
+3. Publicar Producto
+![Paleta de colores](assets/Views/PublicarProducto.png)
 
 <!-- Logo -->
 ### :art: Logo
@@ -72,4 +75,7 @@ Con uso de distintos tamaños
 
 <!-- ejemplo de aplicacion -->
 ### :iphone: Ejemplo de aplicación
-![Ejemplo de aplicación](assets/PatternApplication.png)
+1. Landing Page
+![Ejemplo de aplicación](assets/landingpage.jpg)
+2. About Us
+![Ejemplo de aplicación](assets/aboutus.jpg)
