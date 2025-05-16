@@ -18,7 +18,7 @@ El proyecto REMeal busca reducir el desperdicio de alimentos en Chile, facilitan
 - **¿Quiénes son los usuarios objetivo de su aplicación?**  
 **a)** Personas particulares: que deseen donar, vender o comprar alimentos a precios justos.  
 **b)** Comercios de alimentos: supermercados, restaurantes, panaderías, fábricas de alimentos que gestionen excedentes de forma responsable.  
-**c)**Organizaciones sociales: fundaciones, hogares, comedores comunitarios que busquen alimentos en la sección de ayuda social.  
+**c)** Organizaciones sociales: fundaciones, hogares, comedores comunitarios que busquen alimentos en la sección de ayuda social.  
 **d)** Equipo REMEAL: administradores encargados de validar usuarios, gestionar publicaciones y mantener el correcto funcionamiento de la plataforma.  
 
 
