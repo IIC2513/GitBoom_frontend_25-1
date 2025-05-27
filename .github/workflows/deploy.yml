@@ -26,8 +26,8 @@ jobs:
         # Asegúrate de que 'npm run build' genere la carpeta correcta, p. ej.: ./build
 
       - name: Deploy to Netlify
-        uses: netlify/actions@v1.1.0
+        uses: netlify/actions@v1
         with:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          publish_dir: ./build  # Cambia a la carpeta de salida, si es distinto
+            NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+            NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+            publish_dir: ./build
