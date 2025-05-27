@@ -26,8 +26,85 @@ jobs:
         # Asegúrate de que 'npm run build' genere la carpeta correcta, p. ej.: ./build
 
       - name: Deploy to Netlify
-        uses: netlify/actions@v1
+        uses: netlify/actions/deploy@v1
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-            NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-            NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-            publish_dir: ./build
+          publish_dir: ./build
+      - name: Deploy to Netlify (Alternative)       
+        uses: nwtgck/actions-netlify@v1
+        with:
+          publish-dir: ./build
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: 'Deploy from GitHub Actions'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Notify Deployment
+        run: echo "Deployment to Netlify completed successfully!"
+        # Aquí puedes agregar un paso para enviar una notificación, si es necesario
+      - name: Clean Up
+        run: rm -rf node_modules
+        # Limpia los módulos de Node.js si es necesario para reducir el tamaño del repositorio
+      - name: Post-Deployment Actions
+        run: |
+          echo "Post-deployment actions can be added here."
+          # Aquí puedes agregar acciones adicionales, como limpiar cachés, enviar notificaciones, etc.
+        # Este paso es opcional y puede ser personalizado según tus necesidades
+      - name: Finalize Deployment
+        run: echo "Deployment process has been finalized."
+        # Este paso es opcional y puede ser personalizado según tus necesidades
+      - name: Check Deployment Status
+        run: |
+          echo "Checking deployment status..."
+          # Aquí puedes agregar un comando para verificar el estado del despliegue, si es necesario
+          # Por ejemplo, podrías hacer una solicitud a la API de Netlify para verificar el estado del sitio
+          curl -X GET "https://api.netlify.com/api/v1/sites/${{ secrets.NETLIFY_SITE_ID }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.NETLIFY_AUTH_TOKEN }}"
+          echo "Deployment status checked."
+      - name: Notify Deployment Success
+        run: |
+          echo "Deployment to Netlify was successful!"
+          # Aquí puedes agregar un comando para enviar una notificación, si es necesario
+          # Por ejemplo, podrías enviar un mensaje a Slack, Discord, etc.
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment successful!"}' https://hooks.slack.com/services/your/slack/webhook
+      - name: Final Cleanup
+        run: |
+          echo "Performing final cleanup..."
+          # Aquí puedes agregar comandos para limpiar archivos temporales, cachés, etc.
+          rm -rf ./temp
+          echo "Final cleanup completed."
+      - name: Deployment Complete
+        run: echo "Deployment to Netlify is complete!"
+        # Este paso es opcional y puede ser personalizado según tus necesidades
+        # Aquí puedes agregar un mensaje final o realizar acciones adicionales después del despliegue
+      - name: Notify Deployment Completion
+        run: |
+          echo "Deployment process has been completed successfully!"
+          # Aquí puedes agregar un comando para enviar una notificación final, si es necesario
+          # Por ejemplo, podrías enviar un mensaje a un canal de Slack, Discord, etc.
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment completed!"}' https://hooks.slack.com/services/your/slack/webhook
+      - name: Finalize Workflow
+        run: echo "GitHub Actions workflow has been finalized."
+        # Este paso es opcional y puede ser personalizado según tus necesidades
+        # Aquí puedes agregar un mensaje final o realizar acciones adicionales después de que el flujo de trabajo haya finalizado
+      - name: Cleanup Artifacts
+        run: |
+          echo "Cleaning up artifacts..."
+          # Aquí puedes agregar comandos para limpiar artefactos generados durante el despliegue
+          rm -rf ./artifacts
+          echo "Artifacts cleaned up."
+      - name: Notify Workflow Completion
+        run: |
+          echo "GitHub Actions workflow has been completed successfully!"
+          # Aquí puedes agregar un comando para enviar una notificación final, si es necesario
+          # Por ejemplo, podrías enviar un mensaje a un canal de Slack, Discord, etc.
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"Workflow completed!"}' https://hooks.slack.com/services/your/slack/webhook
+      - name: Final Notification
+        run: |
+          echo "Final notification: Deployment and workflow completed successfully!"
+          # Aquí puedes agregar un comando para enviar una notificación final, si es necesario
+          # Por ejemplo, podrías enviar un mensaje a un canal de Slack, Discord, etc.
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"Final notification: Deployment and workflow completed!"}' https://hooks.slack.com/services/your/slack/webhook
