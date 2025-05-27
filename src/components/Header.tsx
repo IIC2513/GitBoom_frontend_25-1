@@ -3,8 +3,8 @@ import { Menu, X } from 'lucide-react';
 import logo from '../assets/Logosinfondo.png';
 
 interface HeaderProps {
-  currentPage: 'landing' | 'about' | 'docs';
-  setCurrentPage: (page: 'landing' | 'about' | 'docs') => void;
+  currentPage: 'landing' | 'about' | 'docs'| 'main';
+  setCurrentPage: (page: 'landing' | 'about' | 'docs' | 'main') => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
@@ -59,6 +59,13 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
             Cómo Funciona
           </button>
           <button 
+            onClick={() => setCurrentPage('main')}
+            className="text-[#7b7b7b] font-medium hover:text-[#557e35] transition-colors duration-200"
+          >
+            Productos
+          </button>
+
+          <button 
             onClick={() => handleNavigation('landing', 'auth')}
             className="text-[#7b7b7b] font-medium hover:text-[#557e35] transition-colors duration-200"
           >
@@ -101,6 +108,15 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
             >
               Cómo Funciona
             </button>
+
+            <button 
+              onClick={() => setCurrentPage('main')}
+              className="p-2 text-[#7b7b7b] font-medium text-left"
+            >
+              Productos
+            </button>
+
+            
             <button 
               onClick={() => handleNavigation('landing', 'auth')}
               className="p-2 text-[#7b7b7b] font-medium text-left"
