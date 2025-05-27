@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Leaf, Users, Recycle, ShoppingCart, Gift, Utensils, Building, UserCheck, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer'; // Para animar al scrollear
-
 import FeatureCard from '../components/FeatureCard'; // Asumo que este componente existe
 import AuthForms from '../components/AuthForms';     // Asumo que este componente existe
 import logo from '../assets/Logosinfondo.png'; // Asegúrate que la ruta sea correcta
+import MainPage from './MainPage';
 
 // Datos Hardcodeados para Productos
 const sampleProducts = [
@@ -59,7 +59,7 @@ const AnimatedCounter: React.FC<{ to: number; label: string }> = ({ to, label })
 };
 
 
-const MainPage: React.FC = () => {
+const LandingPage: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [productFilter, setProductFilter] = useState<'all' | 'Compra Solidaria' | 'Ayuda Social'>('all');
 
@@ -166,90 +166,6 @@ const MainPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Descubre Productos */}
-      <section id="products" className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#1d311e] text-center mb-6">
-            Explora Productos Disponibles
-          </h2>
-          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Encuentra alimentos a precios reducidos en "Compra Solidaria" o accede a donaciones en "Ayuda Social".
-          </p>
-          
-          <div className="flex justify-center gap-4 mb-10">
-            <button 
-              onClick={() => { setProductFilter('all'); setCurrentSlide(0); }}
-              className={`px-6 py-2 rounded-full font-medium transition-colors ${productFilter === 'all' ? 'bg-[#557e35] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-            >
-              Todos
-            </button>
-            <button 
-              onClick={() => { setProductFilter('Compra Solidaria'); setCurrentSlide(0); }}
-              className={`px-6 py-2 rounded-full font-medium transition-colors ${productFilter === 'Compra Solidaria' ? 'bg-[#557e35] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-            >
-              Compra Solidaria
-            </button>
-            <button 
-              onClick={() => { setProductFilter('Ayuda Social'); setCurrentSlide(0); }}
-              className={`px-6 py-2 rounded-full font-medium transition-colors ${productFilter === 'Ayuda Social' ? 'bg-[#557e35] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-            >
-              Ayuda Social
-            </button>
-          </div>
-
-          {displayedProducts.length > 0 ? (
-            <div className="relative">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {displayedProducts.map(product => (
-                  <motion.div 
-                    key={product.id}
-                    className="bg-white rounded-xl shadow-xl overflow-hidden flex flex-col group transform hover:scale-[1.02] transition-transform duration-300"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className="h-56 overflow-hidden">
-                      <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                    </div>
-                    <div className="p-5 flex flex-col flex-grow">
-                      <span className={`text-xs font-semibold px-2 py-1 rounded-full self-start mb-2 ${product.type === 'Compra Solidaria' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
-                        {product.type}
-                      </span>
-                      <h3 className="text-lg font-semibold text-[#1d311e] mb-1">{product.name}</h3>
-                      <p className="text-sm text-gray-500 mb-1">por: {product.seller}</p>
-                      <p className="text-sm text-gray-500 mb-3">📍 {product.location}</p>
-                      <div className="mt-auto flex justify-between items-center">
-                        <p className="text-xl font-bold text-[#557e35]">{product.price}</p>
-                        <button className="px-4 py-2 bg-[#557e35] text-white text-sm font-medium rounded-lg hover:bg-[#4a6e2e] transition-colors">
-                          Ver Detalle
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-              {totalPages > 1 && (
-                <>
-                  <button onClick={prevSlide} className="absolute top-1/2 -left-4 md:-left-6 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-10">
-                    <ChevronLeft className="w-6 h-6 text-[#557e35]" />
-                  </button>
-                  <button onClick={nextSlide} className="absolute top-1/2 -right-4 md:-right-6 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-10">
-                    <ChevronRight className="w-6 h-6 text-[#557e35]" />
-                  </button>
-                </>
-              )}
-            </div>
-          ) : (
-            <p className="text-center text-gray-500 py-10">No hay productos disponibles para esta selección.</p>
-          )}
-           <div className="text-center mt-12">
-             <a href="#" className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-[#557e35] text-[#557e35] font-semibold rounded-lg hover:bg-[#557e35] hover:text-white transition-colors duration-300">
-                Ver Todos los Productos <ArrowRight className="w-5 h-5 ml-2" />
-             </a>
-           </div>
-        </div>
-      </section>
-
       {/* ¿Quiénes Hacen Posible REMEAL? */}
       <section id="community-actors" className="py-16 md:py-24 bg-emerald-50">
         <div className="container mx-auto px-4">
@@ -331,4 +247,4 @@ const MainPage: React.FC = () => {
   );
 };
 
-export default MainPage;
+export default LandingPage;
