@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import MainPage from './pages/MainPage';
+import MainPage from './pages/LandingPage';
 import AboutUsPage from './pages/AboutUsPage';
 import DocsPage from './pages/DocsPage';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<'landing' | 'about' | 'docs'>('landing');
@@ -11,7 +12,7 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <MainPage />;
+        return <LandingPage />;
       case 'about':
         return <AboutUsPage />;
       case 'docs':
