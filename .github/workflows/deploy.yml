@@ -37,7 +37,7 @@ jobs:
       - name: Deploy to Netlify (Alternative)       
         uses: nwtgck/actions-netlify@v1
         with:
-          publish-dir: ./build
+          publish-dir: ./dist
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: 'Deploy from GitHub Actions'
@@ -45,6 +45,9 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
+      - name: List output directory
+        run: ls -la
+    
       - name: Notify Deployment
         run: echo "Deployment to Netlify completed successfully!"
 
