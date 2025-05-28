@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Leaf, Users, Recycle, ShoppingCart, Gift, Utensils, Building, UserCheck, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
-import { useInView } from 'react-intersection-observer'; // Para animar al scrollear
-import FeatureCard from '../components/FeatureCard'; // Asumo que este componente existe
-import AuthForms from '../components/AuthForms';     // Asumo que este componente existe
-import logo from '../assets/Logosinfondo.png'; // Asegúrate que la ruta sea correcta
+import { useInView } from 'react-intersection-observer'; 
+import FeatureCard from '../components/FeatureCard'; 
+import AuthForms from '../components/AuthForms';     
+import ProductCard from '../components/ProductCard';
+import logo from '../assets/Logosinfondo.png'; 
 import MainPage from './MainPage';
 
 // Datos Hardcodeados para Productos
@@ -32,7 +33,7 @@ const AnimatedCounter: React.FC<{ to: number; label: string }> = ({ to, label })
       });
 
       let startTime: number | null = null;
-      const duration = 2000; // 2 segundos
+      const duration = 2000; 
 
       const animate = (timestamp: number) => {
         if (!startTime) startTime = timestamp;
@@ -77,7 +78,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollToProducts, onVerProduc
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 300); // Ajusta el delay si es necesario
+      }, 300); 
     }
   }, [scrollToProducts]);
   
@@ -121,7 +122,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollToProducts, onVerProduc
             <img
               src={logo}
               alt="REMEAL Logo"
-              className="h-28 md:h-36 w-auto" // Ajustado
+              className="h-28 md:h-36 w-auto" 
             />
           </motion.div>
           <motion.p
@@ -219,33 +220,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollToProducts, onVerProduc
           {displayedProducts.length > 0 ? (
             <div className="relative">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {displayedProducts.map(product => (
-                  <motion.div 
-                    key={product.id}
-                    className="bg-white rounded-xl shadow-xl overflow-hidden flex flex-col group transform hover:scale-[1.02] transition-transform duration-300"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className="h-56 overflow-hidden">
-                      <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                    </div>
-                    <div className="p-5 flex flex-col flex-grow">
-                      <span className={`text-xs font-semibold px-2 py-1 rounded-full self-start mb-2 ${product.type === 'Compra Solidaria' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
-                        {product.type}
-                      </span>
-                      <h3 className="text-lg font-semibold text-[#1d311e] mb-1">{product.name}</h3>
-                      <p className="text-sm text-gray-500 mb-1">por: {product.seller}</p>
-                      <p className="text-sm text-gray-500 mb-3">📍 {product.location}</p>
-                      <div className="mt-auto flex justify-between items-center">
-                        <p className="text-xl font-bold text-[#557e35]">{product.price}</p>
-                        <button className="px-4 py-2 bg-[#557e35] text-white text-sm font-medium rounded-lg hover:bg-[#4a6e2e] transition-colors">
-                          Ver Detalle
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+              {displayedProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+
                 </div>
               {totalPages > 1 && (
                 <>
