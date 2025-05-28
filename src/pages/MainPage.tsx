@@ -1,6 +1,6 @@
 // src/pages/MainPage.tsx
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // Removido useAnimation, useMotionValue, useTransform que no se usaban
+import { motion, AnimatePresence } from 'framer-motion'; 
 import { useInView } from 'react-intersection-observer';
 import {
   ChevronLeft,
@@ -24,8 +24,6 @@ import L from 'leaflet';
 // Importar CSS de Leaflet
 import 'leaflet/dist/leaflet.css';
 
-// Importa tu logo (solo si lo usas en el Header que no está en esta página, sino en App.tsx)
-// import REMealLogo from '../assets/Logosinfondo.png'; // Comentado ya que no hay Hero section aquí
 
 // --- Corregir el problema del icono de Leaflet ---
 // @ts-ignore
@@ -73,7 +71,7 @@ const sampleProducts: Product[] = [
   { id: 10, id_usuario: 110, name: 'Huevos de Campo (Docena)', modalidad: 'Compra Solidaria', precio: '$2.500', image: 'https://images.pexels.com/photos/162712/egg-white-food-protein-162712.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Granja Los Aromos (Cliente Particular)', ubicacion_texto: 'Camino a Melipilla Km 15, Padre Hurtado', lat: -33.5781, lng: -70.8268, fecha_publicacion: '2024-07-22', fecha_expiracion: '2024-08-05', estado: 'Disponible', descripcion_corta: 'Docena de huevos frescos de gallinas felices.', horario_retiro: 'Coordinar por interno' },
 ];
 
-// --- Sub-Componentes (ProductCard, ProductDetailModal, InfoItem, FitBoundsToMarkers se mantienen igual que en tu código) ---
+// --- Sub-Componentes  ---
 
 const ProductCard: React.FC<{ product: Product; onDetailsClick: (product: Product) => void; className?: string }> = ({ product, onDetailsClick, className }) => {
   const cardVariants = { // Esta variante se usa si ProductCard se anima individualmente.
@@ -82,8 +80,7 @@ const ProductCard: React.FC<{ product: Product; onDetailsClick: (product: Produc
   };
 
   return (
-    <motion.div // Si la lista completa se anima con AnimatePresence, esta moción individual puede ser redundante o causar doble animación.
-      // variants={cardVariants} // Puedes comentar esto si la animación de la lista es suficiente.
+    <motion.div 
       className={`bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 ease-in-out flex flex-col ${className}`}
     >
       <div className="w-full h-48 overflow-hidden">
@@ -191,7 +188,7 @@ const FitBoundsToMarkers: React.FC<{ products: Product[] }> = ({ products }) => 
         map.setView([products[0].lat, products[0].lng], 13);
       }
     } else {
-        map.setView([-33.45694, -70.64827], 6); // Vista de Chile si no hay productos
+        map.setView([-33.45694, -70.64827], 6); 
     }
   }, [products, map]);
   return null;
@@ -210,7 +207,7 @@ const MainPage: React.FC = () => {
     (productFilter === 'all' || p.modalidad === productFilter) && p.estado === 'Disponible'
   );
 
-  const productsPerPageInList = 6; // Aumentado para mostrar más en la vista de lista por defecto
+  const productsPerPageInList = 6; 
   const totalProductListPages = Math.ceil(filteredRawProducts.length / productsPerPageInList);
   const displayedListProducts = filteredRawProducts.slice(
     currentProductPage * productsPerPageInList,
@@ -224,7 +221,7 @@ const MainPage: React.FC = () => {
   const handleCloseProductModal = () => setSelectedProductModal(null);
 
   const sectionVariants = {
-    hidden: { opacity: 0, y: 20 }, // Más sutil para la entrada de esta única sección
+    hidden: { opacity: 0, y: 20 }, 
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
@@ -238,7 +235,7 @@ const MainPage: React.FC = () => {
         variants={sectionVariants} 
         initial="hidden" 
         animate={productsSectionInView ? "visible" : "hidden"}
-        className="w-full" // Ocupa todo el ancho disponible
+        className="w-full" 
       >
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-[#1d311e] text-center mb-6">
@@ -286,7 +283,7 @@ const MainPage: React.FC = () => {
               </div>
             ) : (
               // VISTA DE MAPA
-              // Intenta quitar la animación de la sección si el error de Leaflet persiste para aislar el problema
+             
               <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden shadow-lg border border-gray-200 relative z-0">
                 <MapContainer center={[-33.45694, -70.64827]} zoom={6} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }} className="z-0">
                   <TileLayer attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
