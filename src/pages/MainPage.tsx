@@ -1,8 +1,8 @@
 // src/pages/MainPage.tsx
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import '../styles/MainPage.css'; // Import your custom styles if needed
 import { useInView } from 'react-intersection-observer'; // Para animar al scrollear
 import FeatureCard from '../components/FeatureCard'; // Asumo que este componente existe
 import AuthForms from '../components/AuthForms';     // Asumo que este componente existe
@@ -22,11 +22,17 @@ const MainPage: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [productFilter, setProductFilter] = useState<'all' | 'Compra Solidaria' | 'Ayuda Social'>('all');
 
+  useEffect(() => {
+    const el = document.getElementById('products');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
   const filteredProducts = sampleProducts.filter(p => 
     productFilter === 'all' || p.type === productFilter
   );
 
-  const productsPerPage = 3; 
+  const productsPerPage = 6; 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const nextSlide = () => {
@@ -121,34 +127,10 @@ const MainPage: React.FC = () => {
           ) : (
             <p className="text-center text-gray-500 py-10">No hay productos disponibles para esta selección.</p>
           )}
-           <div className="text-center mt-12">
-             <a href="#" className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-[#557e35] text-[#557e35] font-semibold rounded-lg hover:bg-[#557e35] hover:text-white transition-colors duration-300">
-                Ver Todos los Productos <ArrowRight className="w-5 h-5 ml-2" />
-             </a>
-           </div>
+           
         </div>
       </section>
 
-
-
-      {/* Auth Section (Tu sección actual) */}
-      <section id="auth" className="py-16 md:py-24 bg-[#e8c3a4] bg-opacity-30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#1d311e] text-center mb-12">
-            Únete a la Comunidad REMEAL
-          </h2>
-          <AuthForms />
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-8 bg-[#1d311e] text-gray-300 text-center">
-        <div className="container mx-auto px-4">
-          <img src={logo} alt="REMEAL Logo" className="h-12 w-auto mx-auto mb-4 opacity-70" />
-          <p>© {new Date().getFullYear()} REMEAL. Todos los derechos reservados.</p>
-          <p className="text-sm mt-1">Transformando el desperdicio en oportunidad.</p>
-        </div>
-      </footer>
 
     </div>
   );
