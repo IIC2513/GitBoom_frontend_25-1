@@ -65,6 +65,12 @@ const sampleProducts: Product[] = [
   { id: 2, id_usuario: 102, name: 'Caja de Tomates Maduros', modalidad: 'Ayuda Social', precio: 'Gratis', image: 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Supermercado La Granja', ubicacion_texto: 'Merced 456, Santiago Centro', lat: -33.4379, lng: -70.6505, fecha_publicacion: '2024-07-19', estado: 'Disponible', descripcion_corta: 'Tomates frescos listos para consumir.', cantidad: '1 caja (aprox 2kg)' },
   { id: 3, id_usuario: 103, name: 'Menú del Día Sobrante', modalidad: 'Compra Solidaria', precio: '$2.000', image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Restaurante Sabor Casero', ubicacion_texto: 'Irarrázaval 789, Ñuñoa', lat: -33.4589, lng: -70.6009, fecha_publicacion: '2024-07-21', estado: 'Disponible', descripcion_corta: 'Comida casera, porción generosa.', horario_retiro: 'Después de las 15:00' },
   { id: 4, id_usuario: 104, name: 'Yogures Próximos a Vencer', modalidad: 'Ayuda Social', precio: 'Gratis', image: 'https://images.pexels.com/photos/799273/pexels-photo-799273.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Lácteos Frescos SA', ubicacion_texto: 'Pajaritos 1011, Maipú', lat: -33.5114, lng: -70.7685, fecha_publicacion: '2024-07-18', fecha_expiracion: '2024-07-23', estado: 'Disponible', descripcion_corta: 'Pack de yogures variados.', cantidad: 'Pack de 6 unidades' },
+  { id: 5, id_usuario: 105, name: 'Bolsa de Manzanas Fuji', modalidad: 'Compra Solidaria', precio: '$1.200', image: 'https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Frutería La Esquina Verde', ubicacion_texto: 'Av. Apoquindo 5000, Las Condes', lat: -33.4130, lng: -70.5708, fecha_publicacion: '2024-07-22', fecha_expiracion: '2024-07-28', horario_retiro: '09:00 - 17:00', cantidad: '1 kg', estado: 'Disponible', descripcion_corta: 'Manzanas Fuji frescas y crujientes, ideal para snack.' },
+  { id: 6, id_usuario: 106, name: 'Leche Entera Larga Vida', modalidad: 'Ayuda Social', precio: 'Gratis', image: 'https://images.pexels.com/photos/248412/pexels-photo-248412.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Almacén Don Pepe', ubicacion_texto: 'San Pablo 3030, Quinta Normal', lat: -33.4306, lng: -70.6871, fecha_publicacion: '2024-07-20', fecha_expiracion: '2024-08-15', estado: 'Disponible', descripcion_corta: 'Cajas de leche entera UHT.', cantidad: '3 cajas de 1L' },
+  { id: 7, id_usuario: 107, name: 'Pastel de Chocolate (Porción)', modalidad: 'Compra Solidaria', precio: '$1.000', image: 'https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Pastelería Dulce Bocado', ubicacion_texto: 'Av. Vitacura 3500, Vitacura', lat: -33.3996, lng: -70.5800, fecha_publicacion: '2024-07-22', estado: 'Disponible', descripcion_corta: 'Deliciosa porción de pastel de chocolate del día.', horario_retiro: '16:00 - 19:00' },
+  { id: 8, id_usuario: 108, name: 'Mix de Verduras para Sopa', modalidad: 'Ayuda Social', precio: 'Gratis', image: 'https://images.pexels.com/photos/533360/pexels-photo-533360.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Fundación Manos Amigas', ubicacion_texto: 'Gran Avenida 4500, San Miguel', lat: -33.4993, lng: -70.6516, fecha_publicacion: '2024-07-21', estado: 'Disponible', descripcion_corta: 'Bolsas con mix de verduras frescas para preparar sopa.', cantidad: 'Aprox. 500g por bolsa' },
+  { id: 9, id_usuario: 109, name: 'Arroz Grado 1 (Bolsa)', modalidad: 'Compra Solidaria', precio: '$800', image: 'https://images.pexels.com/photos/3737694/pexels-photo-3737694.jpeg', seller_name: 'Mini Market El Ahorro', ubicacion_texto: 'Av. La Florida 9000, La Florida', lat: -33.5528, lng: -70.5898, fecha_publicacion: '2024-07-19', estado: 'Disponible', descripcion_corta: 'Bolsa de arroz de 1kg, grado 1.', cantidad: '1 kg' },
+  { id: 10, id_usuario: 110, name: 'Huevos de Campo (Docena)', modalidad: 'Compra Solidaria', precio: '$2.500', image: 'https://images.pexels.com/photos/162712/egg-white-food-protein-162712.jpeg?auto=compress&cs=tinysrgb&w=400', seller_name: 'Granja Los Aromos (Cliente Particular)', ubicacion_texto: 'Camino a Melipilla Km 15, Padre Hurtado', lat: -33.5781, lng: -70.8268, fecha_publicacion: '2024-07-22', fecha_expiracion: '2024-08-05', estado: 'Disponible', descripcion_corta: 'Docena de huevos frescos de gallinas felices.', horario_retiro: 'Coordinar por interno' },
 ];
 
 // --- Sub-Componentes (ProductCard, ProductDetailModal, InfoItem, FitBoundsToMarkers se mantienen igual que en tu código) ---
@@ -109,11 +115,20 @@ const ProductCard: React.FC<{ product: Product; onDetailsClick: (product: Produc
 const ProductDetailModal: React.FC<{ product: Product | null; onClose: () => void }> = ({ product, onClose }) => {
   if (!product) return null;
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50" onClick={onClose}>
-      <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }}
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-[1000]"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ y: 50, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }} 
+        exit={{ y: 50, opacity: 0 }}
         className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8"
-        onClick={(e) => e.stopPropagation()}>
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between items-start mb-6">
           <h2 className="text-2xl md:text-3xl font-bold text-[#1d311e]">{product.name}</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-800"><X size={28} /></button>
@@ -272,8 +287,8 @@ const MainPage: React.FC = () => {
             ) : (
               // VISTA DE MAPA
               // Intenta quitar la animación de la sección si el error de Leaflet persiste para aislar el problema
-              <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden shadow-lg border border-gray-200">
-                <MapContainer center={[-33.45694, -70.64827]} zoom={6} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
+              <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden shadow-lg border border-gray-200 relative z-0">
+                <MapContainer center={[-33.45694, -70.64827]} zoom={6} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }} className="z-0">
                   <TileLayer attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                   {filteredRawProducts.map(product => (
                     <Marker key={product.id} position={[product.lat, product.lng]}>
