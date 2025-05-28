@@ -23,12 +23,12 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
     setMobileMenuOpen(false);
     
     if (anchor && page === 'landing') {
-      // Wait for page to render before scrolling
+      
       setTimeout(() => {
         scrollToSection(anchor);
       }, 100);
     } else {
-      // Scroll to top when changing pages
+      
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };

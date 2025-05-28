@@ -83,7 +83,7 @@ const DocsPageRemealEnhanced: React.FC = () => {
         ScrollTrigger.create({
           trigger: featuresPinRef.current,
           start: 'top top',
-          end: `+=${featureItems.length * 250}`, // Ajusta este valor según la altura del contenido de los items
+          end: `+=${featureItems.length * 250}`, 
           pin: featuresImageRef.current,
           pinSpacing: true,
           // markers: true,

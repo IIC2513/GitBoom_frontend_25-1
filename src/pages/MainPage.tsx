@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer'; // Para animar al scrollear
-import FeatureCard from '../components/FeatureCard'; // Asumo que este componente existe
-import AuthForms from '../components/AuthForms';     // Asumo que este componente existe
+import ProductCard from '../components/ProductCard';
+import { useInView } from 'react-intersection-observer'; 
+import FeatureCard from '../components/FeatureCard'; 
+import AuthForms from '../components/AuthForms';     
 import logo from '../assets/Logosinfondo.png';
 
-// Sample product data
+
 const sampleProducts = [
   { id: 1, name: 'Pan Integral Artesanal', type: 'Compra Solidaria', price: '$1.500', image: 'https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Panadería El Sol', location: 'Santiago Centro' },
   { id: 2, name: 'Caja de Tomates Maduros', type: 'Ayuda Social', price: 'Gratis', image: 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Supermercado La Granja', location: 'Providencia' },
@@ -85,33 +86,10 @@ const MainPage: React.FC = () => {
           {displayedProducts.length > 0 ? (
             <div className="relative">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {displayedProducts.map(product => (
-                  <motion.div 
-                    key={product.id}
-                    className="bg-white rounded-xl shadow-xl overflow-hidden flex flex-col group transform hover:scale-[1.02] transition-transform duration-300"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className="h-56 overflow-hidden">
-                      <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                    </div>
-                    <div className="p-5 flex flex-col flex-grow">
-                      <span className={`text-xs font-semibold px-2 py-1 rounded-full self-start mb-2 ${product.type === 'Compra Solidaria' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
-                        {product.type}
-                      </span>
-                      <h3 className="text-lg font-semibold text-[#1d311e] mb-1">{product.name}</h3>
-                      <p className="text-sm text-gray-500 mb-1">por: {product.seller}</p>
-                      <p className="text-sm text-gray-500 mb-3">📍 {product.location}</p>
-                      <div className="mt-auto flex justify-between items-center">
-                        <p className="text-xl font-bold text-[#557e35]">{product.price}</p>
-                        <button className="px-4 py-2 bg-[#557e35] text-white text-sm font-medium rounded-lg hover:bg-[#4a6e2e] transition-colors">
-                          Ver Detalle
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+              {displayedProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+
               </div>
               {totalPages > 1 && (
                 <>
