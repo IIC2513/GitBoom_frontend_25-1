@@ -1,4 +1,4 @@
-# E0 :construction:
+# E1 :construction:
 
 * :pencil2: REMeal
 
@@ -24,11 +24,11 @@ El proyecto REMeal busca reducir el desperdicio de alimentos en Chile, facilitan
 
 ## Historia de Usuarios :busts_in_silhouette:
 
-1. Como usuario donador (supermercado, restaurante o persona particular), quiero publicar productos excedentes en la plataforma, pudiendo elegir si los ofrezco en venta o donación, para evitar el desperdicio de alimentos.
+1. Como donante (supermercado, restaurante o persona particular), quiero publicar productos excedentes en la plataforma, pudiendo elegir si los ofrezco en venta o donación, para evitar el desperdicio de alimentos.
 
-2. Como restaurante, quiero publicar menús del día no vendidos, estableciendo un precio o donación gratuita, para compartir comida cocinada con personas o instituciones cercanas. antes de que se desperdicie.
+2. Como donante, quiero publicar productos al final del día no vendidos, estableciendo un precio o donación gratuita, para compartir comida cocinada con personas o instituciones cercanas. antes de que se desperdicie.
 3. Como usuario receptor, quiero visualizar productos disponibles en un mapa y por categorías (venta o ayuda social), para encontrar rápidamente los alimentos que necesito.
-4. Como persona particular, quiero agendar el horario disponible para el retiro de los alimentos que publique, para coordinar de manera más eficiente la entrega.
+4. Como donante, quiero agendar el horario disponible para el retiro de los alimentos que publique, para coordinar de manera más eficiente la entrega.
 5. Como usuario, quiero recibir notificaciones cuando un producto pase automáticamente de venta a donación (24 horas antes de vencer), para aprovechar las oportunidades de alimentos gratuitos.
 6. Como usuario receptor (fundación, comedor social o vecino), quiero reservar productos disponibles para asegurarme de retirarlos a tiempo antes de que expiren.
 7. Como usuario receptor, quiero dejar valoraciones sobre los donadores después de recibir alimentos, para contribuir a la confianza y reputación en la plataforma.
@@ -42,7 +42,7 @@ El proyecto REMeal busca reducir el desperdicio de alimentos en Chile, facilitan
 
 ## Diagrama Entidad-Relación :scroll:
 <!-- Insertamos la imagen ER-Model.png -->
-![ER-Model](assets/diagrama.jpeg)
+![ER-Model](assets/diagrama.png)
 
 ## Diseño Web :computer:
 
