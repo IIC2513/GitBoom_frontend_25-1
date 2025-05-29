@@ -1,6 +1,6 @@
-# E0 :construction:
+# E1 :construction:
 
-* :pencil2: REMeal
+* REMeal
 
 
 ## Descripción general :thought_balloon:
@@ -61,7 +61,7 @@ Con uso de distintos tamaños
 
 
 <!-- Vistas principales -->
-### :mag: Vistas principales
+### :mag: Mock Up Vistas principales
 1. Detalle Producto
 ![Paleta de colores](assets/Views/DetalleProducto.png)
 2. Explorar Productos
@@ -73,9 +73,27 @@ Con uso de distintos tamaños
 ### :art: Logo
 ![Logo](assets/Logo.png)
 
-<!-- ejemplo de aplicacion -->
-### :iphone: Ejemplo de aplicación
+### :mag: Vistas Principales
+A continuacion se presentan algunas vistas principales como ejemplo de aplicación
 1. Landing Page
-![Ejemplo de aplicación](assets/landingpage.jpg)
+![Ejemplo de aplicación](assets/paginainicio.png)
+![Ejemplo de aplicación](assets/primeramuestraprod.png)
+
 2. About Us
 ![Ejemplo de aplicación](assets/aboutus.jpg)
+
+3. Página de productos
+![Ejemplo de aplicación](assets/productos.png)
+
+4. Mapa
+![Ejemplo de aplicación](assets/mapa.png)
+
+5. Formulario de registro
+![Ejemplo de aplicación](assets/registro.png)
+
+6. Cómo funciona
+![Ejemplo de aplicación](assets/funcionamiento.png)
+
+
+
+
