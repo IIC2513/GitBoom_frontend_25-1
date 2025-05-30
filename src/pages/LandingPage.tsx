@@ -6,7 +6,6 @@ import FeatureCard from '../components/FeatureCard';
 import AuthForms from '../components/AuthForms';     
 import ProductCard from '../components/ProductCard';
 import logo from '../assets/Logosinfondo.png'; 
-import MainPage from './MainPage';
 
 // Datos Hardcodeados para Productos
 const sampleProducts = [

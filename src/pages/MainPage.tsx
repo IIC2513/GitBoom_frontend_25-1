@@ -5,7 +5,6 @@ import { useInView } from 'react-intersection-observer';
 import {
   ChevronLeft,
   ChevronRight,
-  ArrowRight,
   Users,
   MapPin,
   List,
