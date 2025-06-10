@@ -3,9 +3,9 @@ import { Leaf, Users, Recycle, ShoppingCart, Gift, Utensils, Building, UserCheck
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer'; 
 import FeatureCard from '../components/FeatureCard'; 
-import AuthForms from '../components/AuthForms';     
 import ProductCard from '../components/ProductCard';
 import logo from '../assets/Logosinfondo.png'; 
+import { useNavigate } from 'react-router-dom';
 
 // Datos Hardcodeados para Productos
 const sampleProducts = [
@@ -58,16 +58,25 @@ const AnimatedCounter: React.FC<{ to: number; label: string }> = ({ to, label })
   );
 };
 
+// Definir la interfaz para el usuario
+interface Usuario {
+  id_usuario: string;
+  nombre: string;
+  correo: string;
+  telefono?: string;
+  direccion?: string;
+  rol: 'usuario' | 'admin';
+  fotoPerfil?: string;
+}
 
 export interface LandingPageProps {
   scrollToProducts?: boolean;
   onVerProductosClick?: () => void;
   /** Callback que recibe { usuario, token } tras login/registro */
-  onAuth: (data: { usuario: any; token: string }) => void;
+  onAuth: (data: { usuario: Usuario; token: string }) => void;
   /** Usuario logueado (o null si no hay sesión) */
-  user: any | null;
+  user: Usuario | null;
 }
-
 
 const LandingPage: React.FC<LandingPageProps> = ({
   scrollToProducts,
@@ -75,9 +84,9 @@ const LandingPage: React.FC<LandingPageProps> = ({
   onAuth,
   user
 }) => {
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [productFilter, setProductFilter] = useState<'all' | 'Compra Solidaria' | 'Ayuda Social'>('all');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (scrollToProducts) {
@@ -148,7 +157,9 @@ const LandingPage: React.FC<LandingPageProps> = ({
               className="px-8 py-3 bg-[#557e35] text-white font-medium rounded-lg shadow-md hover:bg-[#4a6e2e] transition-all duration-300 transform hover:scale-105 min-w-[180px]">
               Ver Productos
             </button>
-            <button className="px-8 py-3 bg-white border-2 border-[#557e35] text-[#557e35] font-medium rounded-lg shadow-md hover:bg-[#557e35] hover:text-white transition-all duration-300 transform hover:scale-105 min-w-[180px]">
+            <button 
+              onClick={() => navigate('/crear-producto')}
+              className="px-8 py-3 bg-white border-2 border-[#557e35] text-[#557e35] font-medium rounded-lg shadow-md hover:bg-[#557e35] hover:text-white transition-all duration-300 transform hover:scale-105 min-w-[180px]">
               Quiero Publicar
             </button>
           </motion.div>
@@ -313,37 +324,6 @@ const LandingPage: React.FC<LandingPageProps> = ({
           </div>
         </div>
       </section>
-
-      {/* Auth Section ahora controlada */}
-      <section id="auth" className="py-16 md:py-24 bg-[#e8c3a4] bg-opacity-30">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#1d311e] mb-12">
-            Únete a la Comunidad REMEAL
-          </h2>
-
-          {user ? (
-            <p className="text-green-medium">
-              ¡Has iniciado sesión como <strong>{user.nombre}</strong>!
-            </p>
-          ) : (
-            <AuthForms
-              mode={authMode}
-              onSwitchMode={setAuthMode}
-              onAuth={onAuth}
-            />
-          )}
-        </div>
-      </section>
-
-      {/* Impact Section */}
-      <section className="container mx-auto px-4 mt-16 md:mt-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          <AnimatedCounter to={1250} label="Kilos de comida salvada" />
-          <AnimatedCounter to={800} label="Conexiones exitosas" />
-          <AnimatedCounter to={300} label="Miembros activos" />
-        </div>
-      </section>
-
 
       {/* Footer */}
       <footer className="py-8 bg-[#1d311e] text-gray-300 text-center">

@@ -1,116 +1,94 @@
 // src/components/Header.tsx
 import React from 'react';
-import { Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, User } from 'lucide-react';
 import logo from '../assets/Logosinfondo.png';
 
 interface HeaderProps {
-  currentPage: 'landing' | 'about' | 'docs' | 'main';
-  setCurrentPage: (page: 'landing' | 'about' | 'docs' | 'main') => void;
   user: any | null;
   onLogout: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
-  currentPage,
-  setCurrentPage,
   user,
   onLogout,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const location = useLocation();
 
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-    setMobileMenuOpen(false);
-  };
-
-  const handleNavigation = (
-    page: 'landing' | 'about' | 'docs' | 'main',
-    anchor?: string
-  ) => {
-    setCurrentPage(page);
-    setMobileMenuOpen(false);
-    if (anchor && page === 'landing') {
-      setTimeout(() => scrollToSection(anchor), 100);
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-10">
       <div className="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
         <div>
-          <button
-            onClick={() => handleNavigation('landing')}
-            aria-label="Ir al inicio"
-          >
+          <Link to="/" aria-label="Ir al inicio">
             <img
               src={logo}
               alt="REMEAL Logo"
               className="h-12 md:h-18 w-auto rounded object-cover cursor-pointer"
             />
-          </button>
+          </Link>
         </div>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6">
-          <button
-            onClick={() => handleNavigation('landing')}
+          <Link
+            to="/"
             className={`font-medium transition-colors duration-200 ${
-              currentPage === 'landing'
+              isActive('/')
                 ? 'text-[#557e35] font-semibold'
                 : 'text-[#7b7b7b] hover:text-[#557e35]'
             }`}
           >
             Inicio
-          </button>
-          <button
-            onClick={() => handleNavigation('docs')}
+          </Link>
+          <Link
+            to="/como-funciona"
             className={`font-medium transition-colors duration-200 ${
-              currentPage === 'docs'
+              isActive('/como-funciona')
                 ? 'text-[#557e35] font-semibold'
                 : 'text-[#7b7b7b] hover:text-[#557e35]'
             }`}
           >
             Cómo Funciona
-          </button>
-          <button
-            onClick={() => handleNavigation('main')}
-            className="text-[#7b7b7b] font-medium hover:text-[#557e35] transition-colors duration-200"
+          </Link>
+          <Link
+            to="/productos"
+            className={`font-medium transition-colors duration-200 text-[#7b7b7b] hover:text-[#557e35] ${
+              isActive('/productos') ? 'text-[#557e35] font-semibold' : ''
+            }`}
           >
             Productos
-          </button>
-
-          <button
-            onClick={() => handleNavigation('about')}
+          </Link>
+          <Link
+            to="/nosotros"
             className={`font-medium transition-colors duration-200 ${
-              currentPage === 'about'
+              isActive('/nosotros')
                 ? 'text-[#557e35] font-semibold'
                 : 'text-[#7b7b7b] hover:text-[#557e35]'
             }`}
           >
             Nosotros
-          </button>
+          </Link>
 
           {user ? (
             <div className="flex items-center space-x-4">
-              <button
-                onClick={onLogout}
-                className="text-sm text-[#557e35] hover:underline"
+              <Link
+                to="/perfil"
+                className="flex items-center space-x-2 bg-[#557e35] text-white px-4 py-2 rounded-md hover:bg-[#4a6e2e] transition-colors"
               >
-                Cerrar sesión
-              </button>
+                <User className="w-5 h-5" />
+                <span>Mi ReMeal</span>
+              </Link>
             </div>
           ) : (
-            <button
-              onClick={() => handleNavigation('landing', 'auth')}
-              className="text-[#7b7b7b] font-medium hover:text-[#557e35] transition-colors duration-200"
+            <Link
+              to="/auth"
+              className="bg-[#557e35] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-90 transition-all duration-200"
             >
-              Únete
-            </button>
+              Regístrate / Login
+            </Link>
           )}
         </nav>
 
@@ -131,64 +109,61 @@ const Header: React.FC<HeaderProps> = ({
       {mobileMenuOpen && (
         <div className="md:hidden bg-white pb-4 px-4">
           <div className="flex flex-col space-y-3">
-            <button
-              onClick={() => handleNavigation('landing')}
+            <Link
+              to="/"
               className={`p-2 font-medium text-left ${
-                currentPage === 'landing'
+                isActive('/')
                   ? 'text-[#557e35] font-semibold'
                   : 'text-[#7b7b7b] hover:text-[#557e35]'
               }`}
             >
               Inicio
-            </button>
-            <button
-              onClick={() => handleNavigation('docs')}
+            </Link>
+            <Link
+              to="/como-funciona"
               className={`p-2 font-medium text-left ${
-                currentPage === 'docs'
+                isActive('/como-funciona')
                   ? 'text-[#557e35] font-semibold'
                   : 'text-[#7b7b7b] hover:text-[#557e35]'
               }`}
             >
               Cómo Funciona
-            </button>
-            <button
-              onClick={() => handleNavigation('main')}
+            </Link>
+            <Link
+              to="/productos"
               className="p-2 font-medium text-left text-[#7b7b7b] hover:text-[#557e35]"
             >
               Productos
-            </button>
-
-            {user ? (
-              <>
-                <div className="p-2 text-left text-gray-700">
-                  Hola, {user.nombre}
-                </div>
-                <button
-                  onClick={onLogout}
-                  className="p-2 text-left text-[#557e35] hover:underline"
-                >
-                  Cerrar sesión
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => handleNavigation('landing', 'auth')}
-                className="p-2 font-medium text-left text-[#7b7b7b] hover:text-[#557e35]"
-              >
-                Únete
-              </button>
-            )}
-
-            <button
-              onClick={() => handleNavigation('about')}
+            </Link>
+            <Link
+              to="/nosotros"
               className={`p-2 font-medium text-left ${
-                currentPage === 'about'
+                isActive('/nosotros')
                   ? 'text-[#557e35] font-semibold'
                   : 'text-[#7b7b7b] hover:text-[#557e35]'
               }`}
             >
               Nosotros
-            </button>
+            </Link>
+
+            {user ? (
+              <>
+                <Link
+                  to="/perfil"
+                  className="flex items-center space-x-2 p-2 text-left text-[#557e35] hover:underline"
+                >
+                  <User className="w-5 h-5" />
+                  <span>Mi ReMeal</span>
+                </Link>
+              </>
+            ) : (
+              <Link
+                to="/auth"
+                className="p-2 font-medium text-left text-[#557e35] hover:underline"
+              >
+                Regístrate / Login
+              </Link>
+            )}
           </div>
         </div>
       )}
