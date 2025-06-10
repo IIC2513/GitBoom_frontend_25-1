@@ -315,7 +315,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollToProducts, onVerProduc
           <h2 className="text-3xl md:text-4xl font-bold text-[#1d311e] text-center mb-12">
             Únete a la Comunidad REMEAL
           </h2>
-          <AuthForms />
+          <AuthForms onAuth={(userData) => { /* handle authentication here */ }} />
         </div>
       </section>
 
