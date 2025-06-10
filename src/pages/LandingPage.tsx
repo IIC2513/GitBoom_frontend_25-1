@@ -59,25 +59,30 @@ const AnimatedCounter: React.FC<{ to: number; label: string }> = ({ to, label })
 };
 
 
-interface LandingPageProps {
+export interface LandingPageProps {
   scrollToProducts?: boolean;
   onVerProductosClick?: () => void;
+  /** Callback que recibe { usuario, token } tras login/registro */
+  onAuth: (data: { usuario: any; token: string }) => void;
+  /** Usuario logueado (o null si no hay sesión) */
+  user: any | null;
 }
 
 
-const LandingPage: React.FC<LandingPageProps> = ({ scrollToProducts, onVerProductosClick}) => {
-
+const LandingPage: React.FC<LandingPageProps> = ({
+  scrollToProducts,
+  onVerProductosClick,
+  onAuth,
+  user
+}) => {
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [productFilter, setProductFilter] = useState<'all' | 'Compra Solidaria' | 'Ayuda Social'>('all');
 
   useEffect(() => {
     if (scrollToProducts) {
-      setTimeout(() => {
-        const el = document.getElementById('products');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 300); 
+      const timeout = setTimeout(() => setCurrentSlide(0), 300);
+      return () => clearTimeout(timeout);
     }
   }, [scrollToProducts]);
   
@@ -309,15 +314,36 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollToProducts, onVerProduc
         </div>
       </section>
 
-      {/* Auth Section (Tu sección actual) */}
+      {/* Auth Section ahora controlada */}
       <section id="auth" className="py-16 md:py-24 bg-[#e8c3a4] bg-opacity-30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#1d311e] text-center mb-12">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#1d311e] mb-12">
             Únete a la Comunidad REMEAL
           </h2>
-          <AuthForms onAuth={(userData) => { /* handle authentication here */ }} />
+
+          {user ? (
+            <p className="text-green-medium">
+              ¡Has iniciado sesión como <strong>{user.nombre}</strong>!
+            </p>
+          ) : (
+            <AuthForms
+              mode={authMode}
+              onSwitchMode={setAuthMode}
+              onAuth={onAuth}
+            />
+          )}
         </div>
       </section>
+
+      {/* Impact Section */}
+      <section className="container mx-auto px-4 mt-16 md:mt-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <AnimatedCounter to={1250} label="Kilos de comida salvada" />
+          <AnimatedCounter to={800} label="Conexiones exitosas" />
+          <AnimatedCounter to={300} label="Miembros activos" />
+        </div>
+      </section>
+
 
       {/* Footer */}
       <footer className="py-8 bg-[#1d311e] text-gray-300 text-center">
