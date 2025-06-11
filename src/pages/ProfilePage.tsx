@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Package, MapPin, LogOut, Phone, Mail, Clock, DollarSign, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import ProfilePhotoForm from '../components/ProfilePhotoForm';
 
 interface ProfilePageProps {
   user: {
@@ -11,6 +12,7 @@ interface ProfilePageProps {
     telefono?: string;
     direccion?: string;
     rol: 'usuario' | 'admin';
+    fotoPerfil?: string;
   };
   onLogout: () => void;
 }
@@ -35,6 +37,9 @@ interface Product {
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
   const navigate = useNavigate();
+
+  const [photoUrl, setPhotoUrl] = useState<string>(user.fotoPerfil || '');
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -119,6 +124,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
     fetchUserData();
   }, [navigate]);
 
+  const handlePhotoUploaded = (url: string) => {
+    setPhotoUrl(url);
+    const updatedUser = { ...user, fotoPerfil: url };
+    localStorage.setItem('usuario', JSON.stringify(updatedUser));
+  };
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-CL', {
       style: 'currency',
@@ -158,8 +169,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
         {/* Sección de Perfil */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
-            <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-              <User className="w-12 h-12 text-gray-400" />
+            <div className="flex flex-col items-center">
+              <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200">
+                {photoUrl ? (
+                  <img src={photoUrl} alt="Avatar" className="object-cover w-full h-full" />
+                ) : (
+                  <User className="w-12 h-12 text-gray-400 mx-auto mt-6" />
+                )}
+              </div>
+
+              {/* Formulario para subir foto */}
+              <div className="mt-4">
+                <ProfilePhotoForm onUploaded={handlePhotoUploaded} />
+              </div>
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between">
