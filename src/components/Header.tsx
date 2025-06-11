@@ -6,12 +6,10 @@ import logo from '../assets/Logosinfondo.png';
 
 interface HeaderProps {
   user: any | null;
-  onLogout: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   user,
-  onLogout,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const location = useLocation();
@@ -35,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({
         <nav className="hidden md:flex items-center space-x-6">
           <Link
             to="/"
-            className={`font-medium transition-colors duration-200 ${
+            className={`font-medium transition-colors duration-200 focus:outline-none ${
               isActive('/')
                 ? 'text-[#557e35] font-semibold'
                 : 'text-[#7b7b7b] hover:text-[#557e35]'
@@ -45,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({
           </Link>
           <Link
             to="/como-funciona"
-            className={`font-medium transition-colors duration-200 ${
+            className={`font-medium transition-colors duration-200 focus:outline-none ${
               isActive('/como-funciona')
                 ? 'text-[#557e35] font-semibold'
                 : 'text-[#7b7b7b] hover:text-[#557e35]'
@@ -55,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({
           </Link>
           <Link
             to="/productos"
-            className={`font-medium transition-colors duration-200 text-[#7b7b7b] hover:text-[#557e35] ${
+            className={`font-medium transition-colors duration-200 focus:outline-none text-[#7b7b7b] hover:text-[#557e35] ${
               isActive('/productos') ? 'text-[#557e35] font-semibold' : ''
             }`}
           >
@@ -63,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({
           </Link>
           <Link
             to="/nosotros"
-            className={`font-medium transition-colors duration-200 ${
+            className={`font-medium transition-colors duration-200 focus:outline-none ${
               isActive('/nosotros')
                 ? 'text-[#557e35] font-semibold'
                 : 'text-[#7b7b7b] hover:text-[#557e35]'
@@ -76,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-4">
               <Link
                 to="/perfil"
-                className="flex items-center space-x-2 bg-[#557e35] text-white px-4 py-2 rounded-md hover:bg-[#4a6e2e] transition-colors"
+                className="flex items-center space-x-2 bg-[#557e35] text-white px-4 py-2 rounded-md hover:bg-[#4a6e2e] transition-colors focus:outline-none"
               >
                 <User className="w-5 h-5" />
                 <span>Mi ReMeal</span>
@@ -85,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({
           ) : (
             <Link
               to="/auth"
-              className="bg-[#557e35] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-90 transition-all duration-200"
+              className="bg-[#557e35] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-90 transition-all duration-200 focus:outline-none"
             >
               Regístrate / Login
             </Link>
@@ -94,14 +92,10 @@ const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden p-2 focus:outline-none"
           onClick={() => setMobileMenuOpen((open) => !open)}
+          className="lg:hidden text-gray-600 hover:text-[#557e35] focus:outline-none"
         >
-          {mobileMenuOpen ? (
-            <X className="w-6 h-6 text-[#1d311e]" />
-          ) : (
-            <Menu className="w-6 h-6 text-[#1d311e]" />
-          )}
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
@@ -111,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({
           <div className="flex flex-col space-y-3">
             <Link
               to="/"
-              className={`p-2 font-medium text-left ${
+              className={`p-2 font-medium text-left focus:outline-none ${
                 isActive('/')
                   ? 'text-[#557e35] font-semibold'
                   : 'text-[#7b7b7b] hover:text-[#557e35]'
@@ -121,7 +115,7 @@ const Header: React.FC<HeaderProps> = ({
             </Link>
             <Link
               to="/como-funciona"
-              className={`p-2 font-medium text-left ${
+              className={`p-2 font-medium text-left focus:outline-none ${
                 isActive('/como-funciona')
                   ? 'text-[#557e35] font-semibold'
                   : 'text-[#7b7b7b] hover:text-[#557e35]'
@@ -131,13 +125,13 @@ const Header: React.FC<HeaderProps> = ({
             </Link>
             <Link
               to="/productos"
-              className="p-2 font-medium text-left text-[#7b7b7b] hover:text-[#557e35]"
+              className="p-2 font-medium text-left text-[#7b7b7b] hover:text-[#557e35] focus:outline-none"
             >
               Productos
             </Link>
             <Link
               to="/nosotros"
-              className={`p-2 font-medium text-left ${
+              className={`p-2 font-medium text-left focus:outline-none ${
                 isActive('/nosotros')
                   ? 'text-[#557e35] font-semibold'
                   : 'text-[#7b7b7b] hover:text-[#557e35]'
@@ -150,7 +144,7 @@ const Header: React.FC<HeaderProps> = ({
               <>
                 <Link
                   to="/perfil"
-                  className="flex items-center space-x-2 p-2 text-left text-[#557e35] hover:underline"
+                  className="flex items-center space-x-2 p-2 text-left text-[#557e35] hover:underline focus:outline-none"
                 >
                   <User className="w-5 h-5" />
                   <span>Mi ReMeal</span>
@@ -159,7 +153,7 @@ const Header: React.FC<HeaderProps> = ({
             ) : (
               <Link
                 to="/auth"
-                className="p-2 font-medium text-left text-[#557e35] hover:underline"
+                className="p-2 font-medium text-left text-[#557e35] hover:underline focus:outline-none"
               >
                 Regístrate / Login
               </Link>

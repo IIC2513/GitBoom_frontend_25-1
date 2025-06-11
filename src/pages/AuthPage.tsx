@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Loader2 } from 'lucide-react';
 
 // Interfaces actualizadas según el modelo
 interface Usuario {
@@ -37,6 +40,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
   // Estados unificados para carga y mensajes
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
+  const navigate = useNavigate();
 
   // Función para cambiar de modo y limpiar el estado
   const switchMode = (mode: 'login' | 'register') => {
@@ -84,6 +88,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setMessage({ type: 'success', text: '¡Bienvenido de nuevo!' });
       onAuthSuccess({ usuario: usuarioFormateado, token });
+      navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {
         setMessage({ type: 'error', text: error.response.data.error });
@@ -126,6 +131,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
       setMessage({ type: 'success', text: '¡Registro exitoso! Redirigiendo...' });
       // Llama a la función del padre (App.tsx) para actualizar el estado global
       onAuthSuccess({ usuario, token });
+      navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {
         setMessage({ type: 'error', text: error.response.data.error });
