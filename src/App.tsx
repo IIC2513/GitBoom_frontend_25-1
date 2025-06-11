@@ -12,6 +12,8 @@ import ProfilePage from './pages/ProfilePage';
 import AuthPage from './pages/AuthPage';
 import CreateProductPage from './pages/CreateProductPage';
 
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+
 interface Usuario {
   id_usuario: string;
   nombre: string;
@@ -25,7 +27,10 @@ interface Usuario {
 function App() {
   const [user, setUser] = useState<Usuario | null>(null);
   
-  const handleAuthSuccess = ({ usuario }: { usuario: Usuario }) => {
+  const handleAuthSuccess = ({ usuario , token }: { usuario: Usuario ;token: string }) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     console.log('Autenticación exitosa para:', usuario.nombre);
     console.log('Datos del usuario recibidos en App:', usuario);
     setUser(usuario);
@@ -33,10 +38,18 @@ function App() {
 
   // Agregar un useEffect para cargar el usuario del localStorage al iniciar
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('usuario');
+
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      console.log('Token encontrado en localStorage:', token);
+    }  
+
     if (storedUser) {
+      const parsed = JSON.parse(storedUser);
       console.log('Usuario encontrado en localStorage:', JSON.parse(storedUser));
-      setUser(JSON.parse(storedUser));
+      setUser(parsed);
     }
   }, []);
 

@@ -6,10 +6,11 @@ import logo from '../assets/Logosinfondo.png';
 
 interface HeaderProps {
   user: any | null;
-}
+  onLogout: () => void;
+} 
 
 const Header: React.FC<HeaderProps> = ({
-  user,
+  user, onLogout
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const location = useLocation();
@@ -72,9 +73,16 @@ const Header: React.FC<HeaderProps> = ({
 
           {user ? (
             <div className="flex items-center space-x-4">
+              {user.fotoPerfil && (
+                <img
+                  src={user.fotoPerfil}
+                  alt="Avatar"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              )}
               <Link
                 to="/perfil"
-                className="flex items-center space-x-2 bg-[#557e35] text-white px-4 py-2 rounded-md hover:bg-[#4a6e2e] transition-colors focus:outline-none"
+                className="flex items-center space-x-2 bg-[#557e35] text-white px-4 py-2 rounded-md hover:bg-[#4a6e2e] transition"
               >
                 <User className="w-5 h-5" />
                 <span>Mi ReMeal</span>
@@ -83,9 +91,10 @@ const Header: React.FC<HeaderProps> = ({
           ) : (
             <Link
               to="/auth"
-              className="bg-[#557e35] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-90 transition-all duration-200 focus:outline-none"
+              className="flex items-center space-x-2 bg-[#557e35] text-white px-4 py-2 rounded-md hover:bg-[#4a6e2e] transition"
             >
-              Regístrate / Login
+              <User className="w-5 h-5" />
+              <span>Regístrate / Login</span>
             </Link>
           )}
         </nav>
@@ -142,6 +151,13 @@ const Header: React.FC<HeaderProps> = ({
 
             {user ? (
               <>
+                {user.fotoPerfil && (
+                  <img
+                    src={user.fotoPerfil}
+                    alt="Avatar"
+                    className="w-8 h-8 rounded-full object-cover mb-2"
+                  />
+                )}
                 <Link
                   to="/perfil"
                   className="flex items-center space-x-2 p-2 text-left text-[#557e35] hover:underline focus:outline-none"
