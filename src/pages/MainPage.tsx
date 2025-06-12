@@ -168,7 +168,8 @@ const ProductDetailModal: React.FC<{ product: Product; onClose: () => void; curr
                   onClose();
                   navigate(`/productos/editar/${product.id_producto}`);
                 }}
-                className="bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md text-lg"
+                className="bg-[#557e35] text-white font-semibold py-3 px-8 rounded-lg hover:bg-[#4a6d2f] transition-colors duration-300 shadow-md text-lg"
+
               >
                 Gestionar Producto
               </button>
