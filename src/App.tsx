@@ -68,7 +68,7 @@ function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<LandingPage onAuth={handleAuthSuccess} user={user} />} />
-            <Route path="/productos" element={<MainPage />} />
+            <Route path="/productos" element={<MainPage user={user} />} />
             <Route path="/nosotros" element={<AboutUsPage />} />
             <Route path="/como-funciona" element={<DocsPage />} />
             <Route path="/auth" element={<AuthPage onAuthSuccess={handleAuthSuccess} />} />

@@ -109,64 +109,80 @@ const InfoItem: React.FC<{ icon: React.ElementType; label: string; value: string
   </div>
 );
 
-const ProductDetailModal: React.FC<{ product: Product; onClose: () => void }> = ({ product, onClose }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
-    onClick={onClose}
-  >
+const ProductDetailModal: React.FC<{ product: Product; onClose: () => void; currentUser: { id_usuario: string } | null }> = ({ product, onClose, currentUser }) => {
+  const navigate = useNavigate(); // usa el hook aquí dentro del componente
+
+  return (
     <motion.div
-      initial={{ scale: 0.9, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.9, opacity: 0 }}
-      className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-      onClick={e => e.stopPropagation()}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
+      onClick={onClose}
     >
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-6">
-          <h2 className="text-2xl font-bold text-[#1d311e]">{product.nombre}</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            <X size={24} />
-          </button>
-        </div>
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-6">
+            <h2 className="text-2xl font-bold text-[#1d311e]">{product.nombre}</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <img src={product.image} alt={product.nombre} className="w-full h-64 object-cover rounded-lg shadow-md" />
-          <div>
-            <span className={`inline-block text-sm font-bold px-3 py-1 rounded-full text-white mb-3 ${product.categoria === 'Compra Solidaria' ? 'bg-[#ff8c00]' : 'bg-[#557e35]'}`}>
-              {product.categoria} {product.categoria === 'Compra Solidaria' ? `- ${formatPrice(product.precio)}` : '- GRATIS'}
-            </span>
-            <InfoItem icon={Info} label="Estado" value={product.estado} />
-            <InfoItem icon={Package} label="Cantidad" value={product.cantidad} />
-            <InfoItem icon={Users} label="Publicado por" value={product.seller_name} />
-            <InfoItem icon={MapPin} label="Ubicación" value={product.ubicacion} />
-            {product.horario_retiro && <InfoItem icon={Clock} label="Horario de Retiro" value={product.horario_retiro} />}
-            <InfoItem icon={CalendarDays} label="Publicado el" value={new Date(product.fecha_publicacion).toLocaleDateString()} />
-            {product.fecha_expiracion && <InfoItem icon={CalendarDays} label="Vence el" value={new Date(product.fecha_expiracion).toLocaleDateString()} colorClass="text-red-600 font-semibold" />}
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <img src={product.image} alt={product.nombre} className="w-full h-64 object-cover rounded-lg shadow-md" />
+            <div>
+              <span className={`inline-block text-sm font-bold px-3 py-1 rounded-full text-white mb-3 ${product.categoria === 'Compra Solidaria' ? 'bg-[#ff8c00]' : 'bg-[#557e35]'}`}>
+                {product.categoria} {product.categoria === 'Compra Solidaria' ? `- ${formatPrice(product.precio)}` : '- GRATIS'}
+              </span>
+              <InfoItem icon={Info} label="Estado" value={product.estado} />
+              <InfoItem icon={Package} label="Cantidad" value={product.cantidad} />
+              <InfoItem icon={Users} label="Publicado por" value={product.seller_name} />
+              <InfoItem icon={MapPin} label="Ubicación" value={product.ubicacion} />
+              {product.horario_retiro && <InfoItem icon={Clock} label="Horario de Retiro" value={product.horario_retiro} />}
+              <InfoItem icon={CalendarDays} label="Publicado el" value={new Date(product.fecha_publicacion).toLocaleDateString()} />
+              {product.fecha_expiracion && <InfoItem icon={CalendarDays} label="Vence el" value={new Date(product.fecha_expiracion).toLocaleDateString()} colorClass="text-red-600 font-semibold" />}
+            </div>
+          </div>
+
+          {product.descripcion && (
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold text-[#1d311e] mb-2">Descripción</h3>
+              <p className="text-gray-700">{product.descripcion}</p>
+            </div>
+          )}
+
+          <div className="text-center md:text-right">
+            {currentUser && currentUser.id_usuario === product.id_usuario ? (
+              <button
+                onClick={() => {
+                  onClose();
+                  navigate(`/productos/editar/${product.id_producto}`);
+                }}
+                className="bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md text-lg"
+              >
+                Gestionar Producto
+              </button>
+            ) : (
+              <button className="bg-[#557e35] text-white font-semibold py-3 px-8 rounded-lg hover:bg-[#4a6d2f] transition-colors duration-300 shadow-md text-lg">
+                {product.categoria === 'Ayuda Social' ? 'Reservar Donación' : 'Contactar para Comprar'}
+              </button>
+            )}
           </div>
         </div>
-
-        {product.descripcion && (
-          <div className="mb-6">
-            <h3 className="text-xl font-semibold text-[#1d311e] mb-2">Descripción</h3>
-            <p className="text-gray-700">{product.descripcion}</p>
-          </div>
-        )}
-
-        <div className="text-center md:text-right">
-          <button className="bg-[#557e35] text-white font-semibold py-3 px-8 rounded-lg hover:bg-[#4a6d2f] transition-colors duration-300 shadow-md text-lg">
-            {product.categoria === 'Ayuda Social' ? 'Reservar Donación' : 'Contactar para Comprar'}
-          </button>
-        </div>
-      </div>
+      </motion.div>
     </motion.div>
-  </motion.div>
-);
+  );
+};
 
 const FitBoundsToMarkers: React.FC<{ products: Product[] }> = ({ products }) => {
   const map = useMap();
@@ -182,7 +198,12 @@ const FitBoundsToMarkers: React.FC<{ products: Product[] }> = ({ products }) => 
 };
 
 // --- MainPage Component ---
-const MainPage: React.FC = () => {
+interface MainPageProps {
+  user: Usuario | null;
+}
+
+const MainPage: React.FC<MainPageProps> = ({ user }) => {
+
   const [currentProductPage, setCurrentProductPage] = useState(0);
   const [productFilter, setProductFilter] = useState<'all' | 'Compra Solidaria' | 'Ayuda Social'>('all');
   const [productsViewMode, setProductsViewMode] = useState<'list' | 'map'>('list');
@@ -193,6 +214,11 @@ const MainPage: React.FC = () => {
   const navigate = useNavigate();
   
   const { ref: productsSectionRef, inView: productsSectionInView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [currentUser, setCurrentUser] = useState<Usuario | null>(null);
+
+  useEffect(() => {
+    setCurrentUser(user);
+  }, [user]);
 
   // Función para obtener productos del backend
   useEffect(() => {
@@ -403,8 +429,10 @@ const MainPage: React.FC = () => {
         {selectedProductModal && (
           <ProductDetailModal 
             product={selectedProductModal} 
-            onClose={handleCloseProductModal} 
+            onClose={handleCloseProductModal}
+            currentUser={currentUser}
           />
+        
         )}
       </AnimatePresence>
 
