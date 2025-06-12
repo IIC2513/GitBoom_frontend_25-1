@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { User, Package, MapPin, LogOut, Phone, Mail, Clock, DollarSign, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import ProfilePhotoForm from '../components/ProfilePhotoForm';
 
 interface ProfilePageProps {
   user: {
@@ -140,12 +139,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
     fetchUserData();
   }, [navigate]);
 
-  const handlePhotoUploaded = (url: string) => {
-    setPhotoUrl(url);
-    const updatedUser = { ...user, fotoPerfil: url };
-    localStorage.setItem('usuario', JSON.stringify(updatedUser));
-  };
-
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-CL', {
       style: 'currency',
@@ -186,24 +179,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
             <div className="flex flex-col items-center">
-              <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200">
+              <div className="w-28 h-28 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
                 {photoUrl ? (
                   <img src={photoUrl} alt="Avatar" className="object-cover w-full h-full" />
                 ) : (
-                  <User className="w-12 h-12 text-gray-400 mx-auto mt-6" />
+                  <User className="w-20 h-20 text-gray-400" />
                 )}
-              </div>
-
-              {/* Formulario para subir foto */}
-              <div className="mt-4">
-                <ProfilePhotoForm onUploaded={handlePhotoUploaded} />
               </div>
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-[#1d311e]">{user.nombre}</h1>
                 <span className={`px-3 py-1 rounded-full text-sm ${
-                  user.rol === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                  user.rol === 'admin' ? 'bg-gray-100 text-gray-800' : 'bg-gray-100 text-gray-800'
                 }`}>
                   {user.rol === 'admin' ? 'Administrador' : 'Usuario'}
                 </span>
@@ -221,6 +209,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
                   <MapPin className="w-5 h-5 mr-3 text-[#557e35]" />
                   <span className="text-gray-700">{user.direccion || 'No se ha proporcionado dirección'}</span>
                 </div>
+                <button 
+                  onClick={() => navigate('/perfil/editar')}
+                  className="flex items-center justify-center space-x-2 border border-[#557e35] text-[#557e35] hover:bg-[#e8f5e9] transition-colors py-2 px-6 rounded-md font-medium"
+                >
+                  Editar perfil
+                </button> 
               </div>
             </div>
           </div>
@@ -235,7 +229,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
             </h2>
             <button 
               onClick={() => navigate('/crear-producto')}
-              className="bg-[#557e35] text-white px-4 py-2 rounded-md hover:bg-[#4a6e2e] transition-colors"
+              className="border border-[#557e35] text-[#557e35] bg-white px-4 py-2 rounded-md font-semibold hover:bg-[#e8f5e9] transition-colors"
             >
               Publicar Nuevo
             </button>
@@ -454,4 +448,4 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
   );
 };
 
-export default ProfilePage; 
+export default ProfilePage;
