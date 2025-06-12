@@ -39,6 +39,8 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
   const navigate = useNavigate();
   
   const [form, setForm] = useState<Partial<Product>>({
+  
+
     nombre: '',
     descripcion: '',
     tipo_producto: '',
@@ -52,6 +54,9 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
     estado: '',
   });
   const token = localStorage.getItem('token') || '';
+  const [imagenFile, setImagenFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
 
   // Carga inicial
   useEffect(() => {
@@ -80,11 +85,23 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
     e.preventDefault();
     if (!id_producto) return;
     try {
-      await axios.put(
-        `${API_BASE}/api/productos/${id_producto}`,
-        form,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const formData = new FormData();
+      Object.entries(form).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, String(value));
+        }
+      });
+      if (imagenFile) {
+        formData.append('imagen', imagenFile);
+      }
+
+      await axios.put(`${API_BASE}/api/productos/${id_producto}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       navigate('/productos');
     } catch (err) {
       console.error(err);
@@ -159,9 +176,45 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
           />
         </div>
         {/* Agrega más campos según tu modelo */}
+        <div>
+          <label className="block mb-2">Imagen del producto</label>
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt="Nueva vista previa"
+              className="w-40 h-40 object-cover rounded mb-2 border-2 border-dashed border-green-500"
+            />
+          ) : form.imagen_url ? (
+            <img
+              src={form.imagen_url}
+              alt="Imagen actual"
+              className="w-40 h-40 object-cover rounded mb-2"
+            />
+          ) : (
+            <p className="text-gray-500 mb-2">No hay imagen actual</p>
+          )}
+
+          <label className="block mb-1">Cambiar imagen</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                const file = e.target.files[0];
+                setImagenFile(file);
+                setPreviewUrl(URL.createObjectURL(file));
+              }
+            }}
+            className="w-full border px-2 py-1"
+          />
+        </div>
+
+
+
         <button type="submit" className="bg-[#557e35] text-white px-4 py-2 rounded">
           Guardar cambios
         </button>
+
       </form>
     </div>
   );

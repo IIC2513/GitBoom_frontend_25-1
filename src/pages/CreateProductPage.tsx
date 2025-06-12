@@ -7,19 +7,17 @@ import { ArrowLeft, AlertCircle, Search, UploadCloud, X, CheckCircle2 } from 'lu
 import debounce from 'lodash/debounce';
 import L from 'leaflet';
 
-// --- Solución para el icono de Leaflet que no aparece en Vite/Webpack ---
-// Esto previene un error común donde el marcador del mapa no se muestra.
+
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
     shadowUrl: iconShadow,
-    iconAnchor: [12, 41], // Punto del icono que corresponde a la ubicación del marcador
+    iconAnchor: [12, 41], 
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
-// --- Fin de la solución del icono ---
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
 
@@ -45,7 +43,7 @@ interface LocationSuggestion {
 }
 
 // --- Componente de Control del Mapa ---
-// Un componente interno para manejar eventos y centrar el mapa de forma limpia.
+
 const MapController = ({ position, onMapClick }: { position: [number, number], onMapClick: (latlng: L.LatLng) => void }) => {
     const map = useMap();
   
