@@ -73,13 +73,6 @@ const Header: React.FC<HeaderProps> = ({
 
           {user ? (
             <div className="flex items-center space-x-4">
-              {user.fotoPerfil && (
-                <img
-                  src={user.fotoPerfil}
-                  alt="Avatar"
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-              )}
               <Link
                 to="/perfil"
                 className="flex items-center space-x-2 bg-[#557e35] text-white px-4 py-2 rounded-md hover:bg-[#4a6e2e] transition"
