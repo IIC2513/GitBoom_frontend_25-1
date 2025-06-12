@@ -15,15 +15,18 @@ interface Usuario {
   fotoPerfil?: string;
 }
 
-const EditProfilePage: React.FC = () => {
+interface EditProfilePageProps {
+  user: Usuario;
+  onProfileUpdate: (usuario: Usuario) => void;
+}
+
+const EditProfilePage: React.FC<EditProfilePageProps> = ({
+  user,
+  onProfileUpdate
+}) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token') || '';
-  const stored = localStorage.getItem('usuario');
-  if (!stored) {
-    navigate('/auth');
-    return null;
-  }
-  const user: Usuario = JSON.parse(stored);
+
 
   const [form, setForm] = useState<Omit<Usuario, 'id_usuario' | 'rol'>>({
     nombre: user.nombre,
@@ -35,18 +38,17 @@ const EditProfilePage: React.FC = () => {
 
 const handlePhotoUploaded = (url: string) => {
   setForm(prev => ({ ...prev, fotoPerfil: url }));
-  const updatedUser = { ...user, fotoPerfil: url };
-  localStorage.setItem('usuario', JSON.stringify(updatedUser));
+  onProfileUpdate({ ...user, fotoPerfil: url });
 };
 
   // Si quisieras precargar desde la API:
   useEffect(() => {
     axios
-      .get<Usuario>(`${API_BASE}/api/usuarios/${user.id_usuario}`, {
+      .get<{ usuario: Usuario }>(`${API_BASE}/api/usuarios/perfil`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => {
-        const u = res.data;
+        const u = res.data.usuario;
         setForm({
           nombre: u.nombre,
           correo: u.correo,
@@ -66,14 +68,14 @@ const handlePhotoUploaded = (url: string) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.put(
-        `${API_BASE}/api/usuarios/${user.id_usuario}`,
+      const res = await axios.put<{ usuario: Usuario }>(
+        `${API_BASE}/api/usuarios/perfil`,
         form,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // Actualiza localStorage y contexto si usas
-      const updated: Usuario = { ...user, ...res.data };
-      localStorage.setItem('usuario', JSON.stringify(updated));
+      const updatedUser = res.data.usuario;
+      onProfileUpdate(updatedUser);
       navigate('/perfil');
     } catch (err) {
       console.error(err);
