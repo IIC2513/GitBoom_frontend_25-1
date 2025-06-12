@@ -56,7 +56,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
         }
 
         // Obtener el ID del usuario del localStorage
-        const userData = localStorage.getItem('user');
+        const userData = localStorage.getItem('usuario');
         console.log('Datos del usuario en localStorage:', userData);
         
         if (!userData) {
@@ -388,6 +388,39 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
                     {selectedProduct.estado.charAt(0).toUpperCase() + selectedProduct.estado.slice(1)}
                   </span>
                 </div>
+                <div className="mt-6 text-right">
+                  <button
+                    onClick={async () => {
+                      const confirmDelete = confirm('¿Estás seguro de que deseas eliminar este producto?');
+                      if (!confirmDelete) return;
+
+                      try {
+                        const token = localStorage.getItem('token');
+                        const res = await fetch(`${API_BASE}/api/productos/${selectedProduct.id_producto}`, {
+                          method: 'DELETE',
+                          headers: {
+                            Authorization: `Bearer ${token}`
+                          }
+                        });
+
+                        if (!res.ok) {
+                          throw new Error('Error al eliminar el producto');
+                        }
+
+                        // Actualizar la lista de productos (eliminar el que fue borrado)
+                        setProducts(prev => prev.filter(p => p.id_producto !== selectedProduct.id_producto));
+                        setSelectedProduct(null); // Cerrar el modal
+                      } catch (err) {
+                        console.error(err);
+                        alert('Hubo un problema al eliminar el producto.');
+                      }
+                    }}
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Eliminar Producto
+                  </button>
+                </div>
+
               </div>
             </div>
           </motion.div>

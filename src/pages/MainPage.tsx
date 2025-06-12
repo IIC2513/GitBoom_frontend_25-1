@@ -114,7 +114,7 @@ const ProductDetailModal: React.FC<{ product: Product; onClose: () => void }> = 
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
-    className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+    className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
     onClick={onClose}
   >
     <motion.div
@@ -341,20 +341,32 @@ const MainPage: React.FC = () => {
                     position={[product.lat, product.lng]}
                   >
                     <Popup>
-                      <div className="p-2">
-                        <h3 className="font-semibold text-[#1d311e]">{product.nombre}</h3>
-                        <p className="text-sm text-gray-600">{product.descripcion}</p>
-                        <p className="text-sm font-medium mt-2">
-                          {product.categoria === 'Compra Solidaria' ? `$${product.precio.toLocaleString('es-CL', { maximumFractionDigits: 0 })}` : 'GRATIS'}
+                      <div className="w-52">
+                        {product.imagen_url ? (
+                          <img
+                            src={product.imagen_url}
+                            alt={product.nombre}
+                            className="w-full h-28 object-cover rounded-md mb-2"
+                          />
+                        ) : (
+                          <div className="w-full h-28 bg-gray-200 flex items-center justify-center rounded-md mb-2">
+                            <Package className="w-10 h-10 text-gray-400" />
+                          </div>
+                        )}
+                        <h3 className="font-semibold text-[#1d311e] text-sm mb-1">{product.nombre}</h3>
+                        <p className="text-xs text-gray-600 mb-1 line-clamp-2">{product.descripcion}</p>
+                        <p className="text-xs font-medium text-[#557e35] mb-2">
+                          {product.categoria === 'Compra Solidaria' ? `$${product.precio.toLocaleString('es-CL')}` : 'GRATIS'}
                         </p>
                         <button 
                           onClick={() => handleOpenProductModal(product)}
-                          className="mt-2 w-full bg-[#557e35] text-white py-1 px-2 rounded text-sm hover:bg-[#4a6d2f] transition-colors"
+                          className="w-full bg-[#557e35] text-white py-1 px-2 rounded text-xs hover:bg-[#4a6d2f] transition-colors"
                         >
                           Ver Detalles
                         </button>
                       </div>
                     </Popup>
+
                   </Marker>
                 ))}
               </MapContainer>
