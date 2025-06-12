@@ -204,7 +204,7 @@ const MainPage: React.FC = () => {
           ...producto,
           // Agregar campos adicionales necesarios para la UI
           seller_name: producto.nombre, // Por ahora usamos el nombre del producto como seller_name
-          image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', // Imagen por defecto
+          image: producto.imagen_url, // Imagen por defecto
         }));
         setProducts(productosData);
         setError(null);

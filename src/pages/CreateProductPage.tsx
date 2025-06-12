@@ -176,100 +176,58 @@ const CreateProductPage: React.FC = () => {
         reverseGeocode(lat, lng);
     };
     
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        
+      
         try {
-            console.log('Iniciando envío del formulario...');
-            console.log('Datos del formulario:', formData);
-            
-            // Validación de campos requeridos
-            const requiredFields = ['nombre', 'descripcion', 'tipo_producto', 'cantidad', 'categoria', 'ubicacion'];
-            const missingFields = requiredFields.filter(field => !formData[field]);
-            
-            if (missingFields.length > 0) {
-                throw new Error(`Faltan campos requeridos: ${missingFields.join(', ')}`);
-            }
-            
-            // Validación específica para Compra Solidaria
-            if (formData.categoria === 'Compra Solidaria' && !formData.precio) {
-                throw new Error('El precio es requerido para productos de Compra Solidaria');
-            }
-            
-            // Convertir los datos a un objeto plano
-            const productData = {
-                nombre: formData.nombre,
-                descripcion: formData.descripcion,
-                tipo_producto: formData.tipo_producto,
-                cantidad: Number(formData.cantidad),
-                fecha_expiracion: formData.fecha_expiracion,
-                precio: formData.categoria === 'Compra Solidaria' ? Number(formData.precio) : 0,
-                categoria: formData.categoria,
-                ubicacion: formData.ubicacion,
-                lat: Number(formData.lat),
-                lng: Number(formData.lng),
-                horario_retiro: formData.horario_retiro || "Sin especificar"
-            };
-            
-            console.log('Datos a enviar:', productData);
-            
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('No se encontró el token de autenticación');
-            }
-            
-            console.log('Enviando petición al servidor...');
-            
-            const response = await fetch(`${API_BASE}/api/productos`, {
-                method: 'POST',
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(productData)
-            });
-            
-            console.log('Respuesta del servidor:', response.status, response.statusText);
-            
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => null);
-                console.error('Error del servidor:', errorData);
-                throw new Error(errorData?.message || `Error al crear el producto: ${response.status} ${response.statusText}`);
-            }
-            
-            const responseData = await response.json();
-            console.log('Producto creado exitosamente:', responseData);
-            
-            // Si hay una imagen, la subimos en una segunda petición
-            if (imageFile) {
-                const imageFormData = new FormData();
-                imageFormData.append('imagen', imageFile);
-                
-                const imageResponse = await fetch(`${API_BASE}/api/productos/${responseData.id}/imagen`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    body: imageFormData
-                });
-                
-                if (!imageResponse.ok) {
-                    console.warn('No se pudo subir la imagen:', await imageResponse.text());
-                }
-            }
-            
-            setShowSuccess(true);
-            setTimeout(() => {
-                setShowSuccess(false);
-                navigate('/');
-            }, 2000);
+          const token = localStorage.getItem('token');
+          if (!token) throw new Error('Token no encontrado');
+      
+          // Armar FormData
+          const data = new FormData();
+          data.append('nombre', formData.nombre);
+          data.append('descripcion', formData.descripcion);
+          data.append('tipo_producto', formData.tipo_producto);
+          data.append('cantidad', String(formData.cantidad));
+          data.append('fecha_expiracion', formData.fecha_expiracion);
+          data.append('precio', String(formData.categoria === 'Compra Solidaria' ? formData.precio : 0));
+          data.append('categoria', formData.categoria);
+          data.append('ubicacion', formData.ubicacion);
+          data.append('lat', String(formData.lat));
+          data.append('lng', String(formData.lng));
+          data.append('horario_retiro', formData.horario_retiro || 'Sin especificar');
+          if (imageFile) {
+            data.append('imagen', imageFile);
+          }
+      
+          const response = await fetch(`${API_BASE}/api/productos`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            body: data
+          });
+      
+          if (!response.ok) {
+            const err = await response.json().catch(() => null);
+            throw new Error(err?.error || 'Error al crear producto');
+          }
+      
+          setShowSuccess(true);
+          setTimeout(() => {
+            setShowSuccess(false);
+            navigate('/');
+          }, 2000);
         } catch (err: any) {
-            console.error('Error completo:', err);
-            setError(err instanceof Error ? err.message : 'Error al crear el producto');
+          setError(err.message || 'Error desconocido');
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
-    };
+      };
+      
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
@@ -380,30 +338,59 @@ const CreateProductPage: React.FC = () => {
                             {/* Campo de imagen */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Imagen del Producto</label>
-                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+
+                                <div
+                                    className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-lg relative group cursor-pointer transition hover:border-[#557e35]"
+                                    onDragOver={(e) => e.preventDefault()}
+                                    onDrop={(e) => {
+                                    e.preventDefault();
+                                    const file = e.dataTransfer.files?.[0];
+                                    if (file) {
+                                        setImageFile(file);
+                                        setImagePreview(URL.createObjectURL(file));
+                                    }
+                                    }}
+                                    onClick={() => document.getElementById('file-upload')?.click()}
+                                >
                                     <div className="space-y-1 text-center">
-                                        {imagePreview ? (
-                                            <div className="relative group mx-auto">
-                                                <img src={imagePreview} alt="Vista previa" className="h-40 w-auto rounded-md shadow-md" />
-                                                <button type="button" onClick={() => {setImageFile(null); setImagePreview(null)}} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 leading-none hover:bg-red-600 transition-all opacity-0 group-hover:opacity-100" aria-label="Eliminar imagen">
-                                                    <X size={16} />
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <UploadCloud className="mx-auto h-12 w-12 text-gray-400" />
-                                                <div className="flex text-sm text-gray-600">
-                                                    <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-[#557e35] hover:text-[#4a6d2f] focus-within:outline-none">
-                                                        <span>Sube un archivo</span>
-                                                        <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleImageChange} accept="image/*" />
-                                                    </label>
-                                                    <p className="pl-1">o arrástralo aquí</p>
-                                                </div>
-                                            </>
-                                        )}
+                                    {imagePreview ? (
+                                        <div className="relative group mx-auto">
+                                        <img src={imagePreview} alt="Vista previa" className="h-40 w-auto rounded-md shadow-md" />
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                            e.stopPropagation();
+                                            setImageFile(null);
+                                            setImagePreview(null);
+                                            }}
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 leading-none hover:bg-red-600 transition-all opacity-0 group-hover:opacity-100"
+                                            aria-label="Eliminar imagen"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                        <UploadCloud className="mx-auto h-12 w-12 text-gray-400" />
+                                        <div className="flex text-sm text-gray-600 justify-center">
+                                            <span className="text-[#557e35] font-medium">Sube un archivo</span>
+                                            <span className="pl-1">o arrástralo aquí</span>
+                                        </div>
+                                        </>
+                                    )}
                                     </div>
-                                </div>
                             </div>
+
+                            {/* Input oculto real */}
+                            <input
+                                id="file-upload"
+                                name="imagen"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="sr-only"
+                            />
+                        </div>
                             {/* Campo de ubicación con autocompletado */}
                             <div className="space-y-2 relative">
                                 <label className="block text-sm font-medium text-gray-700">Ubicación *</label>
