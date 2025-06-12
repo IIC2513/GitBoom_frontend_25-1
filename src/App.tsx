@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage';
 import AuthPage from './pages/AuthPage';
 import CreateProductPage from './pages/CreateProductPage';
 import EditProductPage from './pages/EditProductPage';
+import EditProfilePage from './pages/EditProfilePage';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -35,6 +36,12 @@ function App() {
     console.log('Autenticación exitosa para:', usuario.nombre);
     console.log('Datos del usuario recibidos en App:', usuario);
     setUser(usuario);
+  };
+
+  // NUEVO: manejar perfil actualizado
+  const handleProfileUpdate = (usuario: Usuario) => {
+    setUser(usuario);
+    localStorage.setItem('usuario', JSON.stringify(usuario));
   };
 
   // Agregar un useEffect para cargar el usuario del localStorage al iniciar
@@ -81,6 +88,15 @@ function App() {
               element={user ? <CreateProductPage /> : <Navigate to="/auth" />} 
             />
             <Route path="/productos/editar/:id_producto" element={<EditProductPage user={user} />} />
+            <Route 
+              path="/perfil/editar"
+              element={user ? (
+                <EditProfilePage
+                  user={user}
+                  onProfileUpdate={handleProfileUpdate}
+                />
+              ) : <Navigate to="/auth" />}
+            />
           </Routes>
         </main>
         <Footer />
