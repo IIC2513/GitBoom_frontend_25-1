@@ -11,6 +11,7 @@ import LandingPage from './pages/LandingPage';
 import ProfilePage from './pages/ProfilePage';
 import AuthPage from './pages/AuthPage';
 import CreateProductPage from './pages/CreateProductPage';
+import EditProductPage from './pages/EditProductPage';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -79,6 +80,7 @@ function App() {
               path="/crear-producto" 
               element={user ? <CreateProductPage /> : <Navigate to="/auth" />} 
             />
+            <Route path="/productos/editar/:id_producto" element={<EditProductPage user={user} />} />
           </Routes>
         </main>
         <Footer />
