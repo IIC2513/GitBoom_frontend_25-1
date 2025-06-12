@@ -152,9 +152,10 @@ const LandingPage: React.FC<LandingPageProps> = ({
             transition={{ duration: 0.7, delay: 0.4 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <button 
-              onClick={onVerProductosClick}
-              className="px-8 py-3 bg-[#557e35] text-white font-medium rounded-lg shadow-md hover:bg-[#4a6e2e] transition-all duration-300 transform hover:scale-105 min-w-[180px]">
+            <button
+              onClick={() => navigate('/productos')}
+              className="px-8 py-3 bg-white border-2 border-[#557e35] text-[#557e35] font-medium rounded-lg shadow-md hover:bg-[#557e35] hover:text-white transition-all duration-300 transform hover:scale-105 min-w-[180px]"
+            >
               Ver Productos
             </button>
             <button 
@@ -256,7 +257,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
           )}
            <div className="text-center mt-12">
            <button
-              onClick={onVerProductosClick}
+              onClick={() => navigate('/productos')}
               className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-[#557e35] text-[#557e35] font-semibold rounded-lg hover:bg-[#557e35] hover:text-white transition-colors duration-300"
             >
               Ver Todos los Productos <ArrowRight className="w-5 h-5 ml-2" />

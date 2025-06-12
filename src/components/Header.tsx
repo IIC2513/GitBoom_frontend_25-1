@@ -22,10 +22,10 @@ const Header: React.FC<HeaderProps> = ({
       <div className="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
         <div>
           <Link to="/" aria-label="Ir al inicio">
-            <img
-              src={logo}
-              alt="REMEAL Logo"
-              className="h-12 md:h-18 w-auto rounded object-cover cursor-pointer"
+            <img 
+              src={logo} 
+              alt="REMEAL Logo" 
+              className="h-12 md:h-18 w-auto object-cover cursor-pointer"
             />
           </Link>
         </div>
