@@ -109,10 +109,26 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
           console.error('Error detallado del servidor:', errorData);
           throw new Error(errorData?.message || `Error al obtener productos: ${productsResponse.status} ${productsResponse.statusText}`);
         }
-
-        const productsData = await productsResponse.json();
-        console.log('Productos obtenidos:', productsData);
-        setProducts(productsData);
+        const raw: any[] = await productsResponse.json();
+        console.log('Productos crudos obtenidos:', raw);
+        // Mapea cada objeto para renombrar id_producto → id
+        const normalized: Product[] = raw.map((p: any) => ({
+          id: p.id_producto,
+          nombre: p.nombre,
+          descripcion: p.descripcion,
+          tipo_producto: p.tipo_producto,
+          cantidad: p.cantidad,
+          fecha_expiracion: p.fecha_expiracion,
+          precio: p.precio,
+          categoria: p.categoria,
+          ubicacion: p.ubicacion,
+          lat: p.lat,
+          lng: p.lng,
+          estado: p.estado,
+          imagen_url: p.imagen_url,
+        }));
+        console.log('Productos normalizados:', normalized);
+        setProducts(normalized);
       } catch (err) {
         console.error('Error completo:', err);
         setError(err instanceof Error ? err.message : 'Error al cargar los datos');
@@ -389,6 +405,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
                   </span>
                 </div>
                 <div className="mt-6 text-right">
+                  {/* Botón Editar */}
+                  <button
+                    onClick={() => navigate(`/productos/editar/${selectedProduct.id}`)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Editar Producto
+                  </button>
+                  {/* Botón Eliminar */}
                   <button
                     onClick={async () => {
                       const confirmDelete = confirm('¿Estás seguro de que deseas eliminar este producto?');
@@ -396,7 +420,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
 
                       try {
                         const token = localStorage.getItem('token');
-                        const res = await fetch(`${API_BASE}/api/productos/${selectedProduct.id_producto}`, {
+                        const res = await fetch(`${API_BASE}/api/productos/${selectedProduct.id}`, {
                           method: 'DELETE',
                           headers: {
                             Authorization: `Bearer ${token}`
@@ -408,7 +432,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
                         }
 
                         // Actualizar la lista de productos (eliminar el que fue borrado)
-                        setProducts(prev => prev.filter(p => p.id_producto !== selectedProduct.id_producto));
+                        setProducts(prev => prev.filter(p => p.id !== selectedProduct.id));
                         setSelectedProduct(null); // Cerrar el modal
                       } catch (err) {
                         console.error(err);
