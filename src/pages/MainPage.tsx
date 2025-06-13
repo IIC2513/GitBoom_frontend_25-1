@@ -226,17 +226,24 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${API_BASE}/api/productos`);
+        const token = localStorage.getItem('token');
+        console.log('Haciendo petición a:', `${API_BASE}/api/productos`);
+        const response = await axios.get(`${API_BASE}/api/productos`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log('Respuesta del servidor:', response.data);
         const productosData = response.data.map((producto: Product) => ({
           ...producto,
-          // Agregar campos adicionales necesarios para la UI
-          seller_name: producto.nombre, // Por ahora usamos el nombre del producto como seller_name
-          image: producto.imagen_url, // Imagen por defecto
+          seller_name: producto.nombre,
+          image: producto.imagen_url,
         }));
+        console.log('Productos procesados:', productosData);
         setProducts(productosData);
         setError(null);
       } catch (err) {
-        console.error('Error fetching products:', err);
+        console.error('Error completo:', err);
         setError('Error al cargar los productos. Por favor, intenta de nuevo más tarde.');
       } finally {
         setLoading(false);
