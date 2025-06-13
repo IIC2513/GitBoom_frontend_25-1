@@ -1,10 +1,10 @@
-# E1 :construction:
+# E2 :construction:
 
 * REMeal
 
 ## Link Deploy
 
-https://dainty-jelly-bf37ab.netlify.app/
+https://gitboom-frontend.netlify.app/
 
 ## Descripción general :thought_balloon:
 
