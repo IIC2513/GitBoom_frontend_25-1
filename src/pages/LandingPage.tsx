@@ -13,7 +13,7 @@ const sampleProducts = [
   { id: 2, name: 'Caja de Tomates Maduros', type: 'Ayuda Social', price: 'Gratis', image: 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Supermercado La Granja', location: 'Providencia' },
   { id: 3, name: 'Menú del Día Sobrante', type: 'Compra Solidaria', price: '$2.000', image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Restaurante Sabor Casero', location: 'Ñuñoa' },
   { id: 4, name: 'Yogures Próximos a Vencer', type: 'Ayuda Social', price: 'Gratis', image: 'https://images.pexels.com/photos/799273/pexels-photo-799273.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Lácteos Frescos SA', location: 'Maipú' },
-  { id: 5, name: 'Bolsa de Naranjas', type: 'Compra Solidaria', price: '$1.000', image: 'https://images.pexels.com/photos/2090877/pexels-photo-2090877.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Frutería Doña Juanita', location: 'Las Condes'},
+  { id: 5, name: 'Bolsa de Naranjas', type: 'Compra Solidaria', price: '$1.000', image: 'https://images.unsplash.com/photo-1582979512210-99b6a53386f9?q=80&w=1000', seller: 'Frutería Doña Juanita', location: 'Las Condes'},
   { id: 6, name: 'Verduras Varias', type: 'Ayuda Social', price: 'Gratis', image: 'https://images.pexels.com/photos/2255999/pexels-photo-2255999.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Huerto Comunitario Verde', location: 'La Florida'},
 ];
 

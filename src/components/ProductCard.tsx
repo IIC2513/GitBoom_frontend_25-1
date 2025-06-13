@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FiMoreVertical, FiEdit, FiTrash2 } from 'react-icons/fi';
 
+// --- Interfaces (sin cambios) ---
 interface Product {
   id: number;
-  id_usuario: string;         
+  id_usuario: string;
   name: string;
   type: string;
   price: string;
@@ -14,7 +16,6 @@ interface Product {
 
 interface Usuario {
   id_usuario: string;
-  // eventialmente puedo necesitar agregar mas campos
 }
 
 interface ProductCardProps {
@@ -22,11 +23,82 @@ interface ProductCardProps {
   user: Usuario | null;
 }
 
+// --- Componente ---
 const ProductCard: React.FC<ProductCardProps> = ({ product, user }) => {
   const nav = useNavigate();
+  
+  // Estado para controlar la visibilidad del menú de opciones
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Hook para detectar clics fuera del menú y cerrarlo
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    // Añadir el listener cuando el menú está abierto
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    // Limpiar el listener al desmontar el componente o cuando el menú se cierra
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+
+  const handleEdit = () => {
+    nav(`/productos/editar/${product.id}`);
+  };
+
+  const handleDelete = () => {
+    // Aquí iría la lógica para eliminar, por ejemplo, mostrar un modal de confirmación
+    alert(`Funcionalidad para eliminar el producto ${product.id} no implementada.`);
+    setIsMenuOpen(false); // Cierra el menú después de la acción
+  };
 
   return (
-    <div className="bg-white rounded-xl shadow-xl overflow-hidden flex flex-col group transform hover:scale-[1.02] transition-transform duration-300">
+    // Añadimos `relative` para que el menú de opciones se posicione correctamente
+    <div className="relative bg-white rounded-xl shadow-xl overflow-hidden flex flex-col group transform hover:scale-[1.02] transition-transform duration-300">
+      
+      {/* --- Menú de Opciones para el dueño del producto --- */}
+      {user?.id_usuario === product.id_usuario && (
+        // Usamos `ref` para detectar clics fuera de este contenedor
+        <div ref={menuRef} className="absolute top-3 right-3 z-20">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-700 hover:bg-white hover:text-green-700 transition-all"
+            aria-label="Más opciones"
+          >
+            <FiMoreVertical size={20} />
+          </button>
+
+          {/* --- Menú Desplegable (se muestra si isMenuOpen es true) --- */}
+          {isMenuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <button
+                onClick={handleEdit}
+                className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <FiEdit className="text-gray-500" />
+                <span>Editar</span>
+              </button>
+              <button
+                onClick={handleDelete}
+                className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+              >
+                <FiTrash2 className="text-red-500" />
+                <span>Eliminar</span>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* --- Contenido de la Tarjeta (sin cambios) --- */}
       <div className="h-56 overflow-hidden">
         <img
           src={product.image}
@@ -61,16 +133,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, user }) => {
             Ver Detalle
           </button>
         </div>
-
-        {/* Botón “Editar” sólo para el dueño */}
-        {user?.id_usuario === product.id_usuario && (
-          <button
-            onClick={() => nav(`/productos/editar/${product.id}`)}
-            className="mt-3 text-sm text-blue-600 hover:underline"
-          >
-            Editar
-          </button>
-        )}
       </div>
     </div>
   );
