@@ -62,6 +62,7 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
+    
   };
 
   // Nuevo: manejar cambio de archivo
@@ -72,6 +73,34 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({
       setPhotoPreview(URL.createObjectURL(file));
     }
   };
+
+
+const handleDeleteAccount = async () => {
+  if (!window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.')) {
+    return;
+  }
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch(
+      `${API_BASE}/api/usuarios/perfil`,
+      {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    );
+    if (res.status === 204) {
+      // limpieza local y redirección
+      localStorage.removeItem('token');
+      navigate('/'); // o a la ruta que decidas
+    } else {
+      const { error } = await res.json();
+      alert(error || 'No se pudo eliminar la cuenta');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error en la solicitud de eliminación');
+  }
+};
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -114,6 +143,7 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({
     <div className="container mx-auto p-4 max-w-lg">
       <h2 className="text-2xl mb-4">Editar Perfil</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+
         <label className="block">
           Nombre
           <input
@@ -154,8 +184,7 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({
             className="w-full border px-2 py-1"
           />
         </label>
-
-        {/* Foto de perfil */}
+                {/* Foto de perfil */}
         <label className="block">
           Foto de perfil
           {photoPreview && (
@@ -178,12 +207,21 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({
           />
         </label>
 
-        <button
-          type="submit"
-          className="bg-[#557e35] text-white px-4 py-2 rounded"
-        >
-          Guardar cambios
-        </button>
+        <div className="flex flex-col items-center gap-2 mt-6">
+          <button
+            type="submit"
+            className="bg-[#557e35] text-white px-4 py-2 rounded w-48"
+          >
+            Guardar cambios
+          </button>
+          <button
+            type="button"
+            onClick={handleDeleteAccount}
+            className="text-red-600 hover:underline mt-2"
+          >
+            Eliminar mi cuenta
+          </button>
+        </div>
       </form>
     </div>
   );
