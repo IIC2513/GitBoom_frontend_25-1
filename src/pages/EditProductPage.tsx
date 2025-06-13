@@ -51,17 +51,21 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
     lng: '',
     estado: '',
   });
+
+  const [imagenFile, setImagenFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const token = localStorage.getItem('token') || '';
 
-  // Carga inicial
   useEffect(() => {
     if (!id_producto) return;
     axios.get<Product>(`${API_BASE}/api/productos/${id_producto}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {
-      // La API entrega el objeto directamente
       setForm(res.data);
+      if (res.data.imagen_url) {
+        setPreviewUrl(res.data.imagen_url);
+      }
     })
     .catch(err => {
       console.error(err);
@@ -69,22 +73,41 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
     });
   }, [id_producto, token]);
 
-  // Manejo de cambios de inputs
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  // Envío del formulario
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setImagenFile(file);
+      setPreviewUrl(URL.createObjectURL(file)); // preview temporal
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!id_producto) return;
+
     try {
-      await axios.put(
-        `${API_BASE}/api/productos/${id_producto}`,
-        form,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const formData = new FormData();
+      Object.entries(form).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, String(value));
+        }
+      });
+      if (imagenFile) {
+        formData.append('imagen', imagenFile);
+      }
+
+      await axios.put(`${API_BASE}/api/productos/${id_producto}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
       navigate('/productos');
     } catch (err) {
       console.error(err);
@@ -92,7 +115,6 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
     }
   };
 
-  // Si no hay usuario, redirigir
   if (!user) {
     navigate('/auth');
     return null;
@@ -106,7 +128,7 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
           <label className="block">Nombre</label>
           <input
             name="nombre"
-            value={form.nombre as string}
+            value={form.nombre || ''}
             onChange={handleChange}
             className="w-full border px-2 py-1"
           />
@@ -115,7 +137,7 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
           <label className="block">Descripción</label>
           <textarea
             name="descripcion"
-            value={form.descripcion as string}
+            value={form.descripcion || ''}
             onChange={handleChange}
             className="w-full border px-2 py-1"
           />
@@ -124,7 +146,7 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
           <label className="block">Tipo de Producto</label>
           <input
             name="tipo_producto"
-            value={form.tipo_producto as string}
+            value={form.tipo_producto || ''}
             onChange={handleChange}
             className="w-full border px-2 py-1"
           />
@@ -134,7 +156,7 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
           <input
             name="cantidad"
             type="number"
-            value={form.cantidad as number}
+            value={form.cantidad || 0}
             onChange={handleChange}
             className="w-full border px-2 py-1"
           />
@@ -144,7 +166,7 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
           <input
             name="precio"
             type="text"
-            value={form.precio as string}
+            value={form.precio?.toString() || ''}
             onChange={handleChange}
             className="w-full border px-2 py-1"
           />
@@ -153,12 +175,30 @@ const EditProductPage: React.FC<EditProductPageProps> = ({ user }) => {
           <label className="block">Ubicación</label>
           <input
             name="ubicacion"
-            value={form.ubicacion as string}
+            value={form.ubicacion || ''}
             onChange={handleChange}
             className="w-full border px-2 py-1"
           />
         </div>
-        {/* Agrega más campos según tu modelo */}
+
+        <div>
+          <label className="block">Imagen actual</label>
+          {previewUrl ? (
+            <img src={previewUrl} alt="preview" className="h-40 object-cover rounded mb-2" />
+          ) : (
+            <p className="text-sm text-gray-500">No hay imagen disponible</p>
+          )}
+        </div>
+        <div>
+          <label className="block">Cambiar imagen</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full border px-2 py-1"
+          />
+        </div>
+
         <button type="submit" className="bg-[#557e35] text-white px-4 py-2 rounded">
           Guardar cambios
         </button>
