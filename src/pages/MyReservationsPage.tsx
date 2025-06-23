@@ -1,86 +1,179 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-interface Reserva {
-  id_reserva: string;
-  estado: string;
-  fecha_retiro: string;
-  mensaje: string;
-  id_producto: string;
-  producto?: {
-    name: string;
-    image: string;
-    price: string;
-  };
-}
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
+interface Reserva {
+  id_reserva: string;
+  id_producto: string;
+  id_usuario: string;
+  fecha_retiro: string;
+  mensaje: string;
+  estado: string;
+  producto_reservado?: {
+    nombre: string;
+    imagen_url: string;
+  };
+}
+
 const MyReservationsPage: React.FC = () => {
   const [reservas, setReservas] = useState<Reserva[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const nav = useNavigate();
+
+  const fetchReservas = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_BASE}/api/reservas`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = response.data;
+
+      // Ordenar antes de setear
+      const estadosOrden = {
+        pendiente: 0,
+        aceptada: 1,
+        entregada: 2,
+        cancelada: 3,
+        rechazada: 4
+      };
+
+      data.sort((a, b) => estadosOrden[a.estado] - estadosOrden[b.estado]);
+
+      setReservas(data);
+    } catch (err) {
+      setError('Error al cargar las reservas');
+    }
+  };
 
   useEffect(() => {
-    const fetchReservas = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_BASE}/api/reservas`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setReservas(response.data);
-      } catch (err: any) {
-        console.error(err);
-        setError('No se pudieron cargar las reservas.');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchReservas();
   }, []);
 
+const marcarComoEntregada = async (id: string) => {
+  try {
+    const token = localStorage.getItem('token');
+    await axios.put(`${API_BASE}/api/reservas/${id}`, {
+      estado: 'entregada'
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    fetchReservas();
+  } catch (error) {
+    console.error('❌ Error al marcar como entregada:', error);
+    setError('No se pudo marcar como entregada.');
+  }
+};
+
+  const cancelarReserva = async (id: string) => {
+  try {
+    const token = localStorage.getItem('token');
+    await axios.put(`${API_BASE}/api/reservas/${id}`, {
+      estado: 'cancelada'
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    fetchReservas();
+  } catch (error) {
+    console.error('❌ Error al cancelar la reserva:', error);
+    setError('No se pudo cancelar la reserva.');
+  }
+};
+
+  const editarReserva = async (id: string, nuevaFecha: string, nuevoMensaje: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`${API_BASE}/api/reservas/${id}`, {
+        fecha_retiro: nuevaFecha,
+        mensaje: nuevoMensaje,
+        estado: 'pendiente'
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      alert('Reserva actualizada');
+      fetchReservas(); // Recarga la lista
+    } catch (err) {
+      console.error('Error al actualizar reserva:', err);
+      setError('No se pudo actualizar la reserva');
+    }
+  };
+
+  const eliminarReserva = async (id: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API_BASE}/api/reservas/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchReservas(); // Recargar después de eliminar
+    } catch (err) {
+      console.error('Error al eliminar reserva', err);
+      setError('No se pudo eliminar la reserva.');
+    }
+  };
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold text-[#1d311e] mb-6">Mis Reservas</h1>
-      {loading ? (
-        <p>Cargando reservas...</p>
-      ) : error ? (
-        <p className="text-red-600">{error}</p>
-      ) : reservas.length === 0 ? (
-        <p>No tienes reservas registradas.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reservas.map((reserva) => (
-            <div key={reserva.id_reserva} className="bg-white shadow-md rounded-xl overflow-hidden">
-              <div className="h-40 overflow-hidden">
-                <img
-                  src={reserva.producto?.image || '/placeholder.jpg'}
-                  alt={reserva.producto?.name || 'Producto'}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-[#1d311e] mb-1">
-                  {reserva.producto?.name || 'Producto reservado'}
-                </h3>
-                <p className="text-sm text-gray-600 mb-1">Estado: <strong>{reserva.estado}</strong></p>
-                <p className="text-sm text-gray-600 mb-1">Fecha de retiro: {new Date(reserva.fecha_retiro).toLocaleString()}</p>
-                <p className="text-sm text-gray-600 mb-2">Mensaje: {reserva.mensaje}</p>
-                <button
-                  onClick={() => nav(`/productos/${reserva.id_producto}`)}
-                  className="mt-2 text-sm text-blue-600 hover:underline"
-                >
-                  Ver producto
-                </button>
-              </div>
+    <div className="p-6 max-w-3xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Mis Reservas</h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <ul className="space-y-4">
+        {reservas.map((reserva) => (
+          <li key={reserva.id_reserva} className="border rounded-lg p-4 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex-1">
+              <p><strong>Producto:</strong> {reserva.producto_reservado?.nombre ?? 'Nombre no disponible'}</p>
+              <p><strong>Producto ID:</strong> {reserva.id_producto}</p>
+              <p><strong>Fecha Retiro:</strong> {new Date(reserva.fecha_retiro).toLocaleString()}</p>
+              <p><strong>Mensaje:</strong> {reserva.mensaje}</p>
+              <p><strong>Estado:</strong> {reserva.estado}</p>
+
+              {reserva.estado === 'pendiente' && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <button
+                    onClick={() => marcarComoEntregada(reserva.id_reserva)}
+                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  >
+                    Marcar como Recogido
+                  </button>
+                  <button
+                    onClick={() => cancelarReserva(reserva.id_reserva)}
+                    className="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={() => eliminarReserva(reserva.id_reserva)}
+                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              )}
+
+              {reserva.estado !== 'pendiente' && (
+                <p className="text-sm text-gray-500 mt-2 italic">
+                  Esta reserva está {reserva.estado === 'entregada' ? 'marcada como entregada' : 'cancelada'} y no puede modificarse.
+                </p>
+              )}
             </div>
-          ))}
-        </div>
-      )}
+
+            {reserva.producto_reservado?.imagen_url && (
+              <img
+                src={reserva.producto_reservado.imagen_url}
+                alt="Producto"
+                className="w-40 h-40 object-cover rounded"
+              />
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
