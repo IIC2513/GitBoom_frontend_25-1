@@ -13,6 +13,8 @@ import AuthPage from './pages/AuthPage';
 import CreateProductPage from './pages/CreateProductPage';
 import EditProductPage from './pages/EditProductPage';
 import EditProfilePage from './pages/EditProfilePage';
+import MyReservationsPage from './pages/MyReservationsPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -88,6 +90,8 @@ function App() {
               element={user ? <CreateProductPage /> : <Navigate to="/auth" />} 
             />
             <Route path="/productos/editar/:id_producto" element={<EditProductPage user={user} />} />
+            <Route path="/productos/:id_producto" element={<ProductDetailPage user={user} />} />
+            <Route path="/mis-reservas" element={<MyReservationsPage />} />
             <Route 
               path="/perfil/editar"
               element={user ? (

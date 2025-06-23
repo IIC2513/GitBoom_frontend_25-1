@@ -215,6 +215,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
                 >
                   Editar perfil
                 </button> 
+                <button 
+                  onClick={() => navigate('/mis-reservas')}
+                  className="flex items-center justify-center space-x-2 border border-[#557e35] text-[#557e35] hover:bg-[#e8f5e9] transition-colors py-2 px-4 rounded-md text-sm font-medium"
+                >
+                  Ver mis reservas
+                </button>
               </div>
             </div>
           </div>
