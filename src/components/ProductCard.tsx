@@ -33,6 +33,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: initialProduct, user
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [puedeOpinar, setPuedeOpinar] = useState(false);
+
+  useEffect(() => {
+  const validarReserva = async () => {
+    if (!user || user.id_usuario === product.id_usuario) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/reservas/producto/${product.id}/tiene-reserva`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await response.json();
+      setPuedeOpinar(data.tieneReserva);
+    } catch (err) {
+      console.error('Error verificando reserva válida:', err);
+    }
+  };
+
+  validarReserva();
+}, [product.id, user]);
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -185,6 +206,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: initialProduct, user
             <p className="mt-1 font-semibold">Publicado el: <span className="font-normal">{product.fechaPublicacion ?? 'N/A'}</span></p>
             <p className="mt-1 font-semibold">Vence el: <span className="font-normal">{product.fechaVencimiento ?? 'N/A'}</span></p>
             <p className="mt-4">{product.descripcion ?? ''}</p>
+            <div className="flex justify-end mt-6 space-x-2">
+            <button
+              onClick={() => {
+                setIsModalOpen(false);
+                window.location.href = `/productos/${product.id}`;
+              }}
+              className="bg-[#557e35] text-white py-2 px-4 rounded-md hover:bg-[#4a6d2f] transition-colors"
+            >
+              Deja tu opinión
+            </button>
+            <button
+              onClick={() => {
+                setIsModalOpen(false);
+                window.location.href = `/productos/${product.id}/valoraciones`;
+              }}
+              className="bg-[#557e35] text-white py-2 px-4 rounded-md hover:bg-[#4a6d2f] transition-colors"
+            >
+              Ver opiniones
+            </button>
+          </div>
           </div>
         </div>
       )}

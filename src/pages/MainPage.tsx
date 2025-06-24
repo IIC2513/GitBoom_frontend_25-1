@@ -237,34 +237,51 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
         </div>
       </motion.section>
 
-      <AnimatePresence>
-        {selectedProductModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
-            onClick={handleCloseProductModal}
+<AnimatePresence>
+  {selectedProductModal && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
+      onClick={handleCloseProductModal}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-6">
+            <h2 className="text-2xl font-bold text-[#1d311e]">{selectedProductModal.nombre}</h2>
+            <button onClick={handleCloseProductModal} className="text-gray-500 hover:text-gray-700 transition-colors">
+              <X size={24} />
+            </button>
+          </div>
+
+          <img
+            src={selectedProductModal.image}
+            alt={selectedProductModal.nombre}
+            className="w-full h-64 object-cover rounded-lg shadow-md mb-6"
+          />
+
+          <p className="text-gray-700 mb-4">{selectedProductModal.descripcion}</p>
+
+          {/* ✅ BOTÓN VER VALORACIONES */}
+          <button
+            onClick={() => navigate(`/productos/${selectedProductModal.id_producto}`)}
+            className="text-sm text-blue-600 hover:underline"
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-              onClick={e => e.stopPropagation()}
-            >
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-2xl font-bold text-[#1d311e]">{selectedProductModal.nombre}</h2>
-                  <button onClick={handleCloseProductModal} className="text-gray-500 hover:text-gray-700 transition-colors"><X size={24} /></button>
-                </div>
-                <img src={selectedProductModal.image} alt={selectedProductModal.nombre} className="w-full h-64 object-cover rounded-lg shadow-md mb-6" />
-                <p className="text-gray-700">{selectedProductModal.descripcion}</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            Ver valoraciones
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
       <motion.button onClick={() => navigate('/crear-producto')} className="fixed bottom-8 right-8 bg-[#557e35] text-white p-4 rounded-full shadow-lg hover:bg-[#4a6d2f] flex items-center gap-2 z-50">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
