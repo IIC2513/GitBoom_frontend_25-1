@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+import { API_BASE } from '../config';
 
 interface Reserva {
   id_reserva: string;
@@ -23,7 +22,7 @@ const MyReservationsPage: React.FC = () => {
   const fetchReservas = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_BASE}/api/reservas`, {
+      const response = await axios.get(`${API_BASE}/api/reservas/mis`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -4,17 +4,90 @@ import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer'; 
 import FeatureCard from '../components/FeatureCard'; 
 import ProductCard from '../components/ProductCard';
+import AnimatedHeroText from '../components/AnimatedHeroText';
 import logo from '../assets/Logosinfondo.png'; 
 import { useNavigate } from 'react-router-dom';
 
 // Datos Hardcodeados para Productos
 const sampleProducts = [
-  { id: 1, name: 'Pan Integral Artesanal', type: 'Compra Solidaria', price: '$1.500', image: 'https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Panadería El Sol', location: 'Santiago Centro' },
-  { id: 2, name: 'Caja de Tomates Maduros', type: 'Ayuda Social', price: 'Gratis', image: 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Supermercado La Granja', location: 'Providencia' },
-  { id: 3, name: 'Menú del Día Sobrante', type: 'Compra Solidaria', price: '$2.000', image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Restaurante Sabor Casero', location: 'Ñuñoa' },
-  { id: 4, name: 'Yogures Próximos a Vencer', type: 'Ayuda Social', price: 'Gratis', image: 'https://images.pexels.com/photos/799273/pexels-photo-799273.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Lácteos Frescos SA', location: 'Maipú' },
-  { id: 5, name: 'Bolsa de Naranjas', type: 'Compra Solidaria', price: '$1.000', image: 'https://images.unsplash.com/photo-1582979512210-99b6a53386f9?q=80&w=1000', seller: 'Frutería Doña Juanita', location: 'Las Condes'},
-  { id: 6, name: 'Verduras Varias', type: 'Ayuda Social', price: 'Gratis', image: 'https://images.pexels.com/photos/2255999/pexels-photo-2255999.jpeg?auto=compress&cs=tinysrgb&w=400', seller: 'Huerto Comunitario Verde', location: 'La Florida'},
+  { 
+    id: 1, 
+    name: 'Pan Integral Artesanal', 
+    type: 'Compra Solidaria', 
+    price: '$1.500', 
+    image: 'https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=400', 
+    seller: 'Panadería El Sol', 
+    location: 'Santiago Centro',
+    cantidad: 5,
+    estado: 'disponible',
+    fechaPublicacion: '2024-01-15',
+    fechaVencimiento: '2024-01-20'
+  },
+  { 
+    id: 2, 
+    name: 'Caja de Tomates Maduros', 
+    type: 'Ayuda Social', 
+    price: 'Gratis', 
+    image: 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=400', 
+    seller: 'Supermercado La Granja', 
+    location: 'Providencia',
+    cantidad: 2,
+    estado: 'disponible',
+    fechaPublicacion: '2024-01-14',
+    fechaVencimiento: '2024-01-18'
+  },
+  { 
+    id: 3, 
+    name: 'Menú del Día Sobrante', 
+    type: 'Compra Solidaria', 
+    price: '$2.000', 
+    image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', 
+    seller: 'Restaurante Sabor Casero', 
+    location: 'Ñuñoa',
+    cantidad: 1,
+    estado: 'disponible',
+    fechaPublicacion: '2024-01-15',
+    fechaVencimiento: '2024-01-16'
+  },
+  { 
+    id: 4, 
+    name: 'Yogures Próximos a Vencer', 
+    type: 'Ayuda Social', 
+    price: 'Gratis', 
+    image: 'https://images.pexels.com/photos/799273/pexels-photo-799273.jpeg?auto=compress&cs=tinysrgb&w=400', 
+    seller: 'Lácteos Frescos SA', 
+    location: 'Maipú',
+    cantidad: 8,
+    estado: 'disponible',
+    fechaPublicacion: '2024-01-13',
+    fechaVencimiento: '2024-01-17'
+  },
+  { 
+    id: 5, 
+    name: 'Bolsa de Naranjas', 
+    type: 'Compra Solidaria', 
+    price: '$1.000', 
+    image: 'https://images.unsplash.com/photo-1582979512210-99b6a53386f9?q=80&w=1000', 
+    seller: 'Frutería Doña Juanita', 
+    location: 'Las Condes',
+    cantidad: 3,
+    estado: 'disponible',
+    fechaPublicacion: '2024-01-14',
+    fechaVencimiento: '2024-01-21'
+  },
+  { 
+    id: 6, 
+    name: 'Verduras Varias', 
+    type: 'Ayuda Social', 
+    price: 'Gratis', 
+    image: 'https://images.pexels.com/photos/2255999/pexels-photo-2255999.jpeg?auto=compress&cs=tinysrgb&w=400', 
+    seller: 'Huerto Comunitario Verde', 
+    location: 'La Florida',
+    cantidad: 4,
+    estado: 'disponible',
+    fechaPublicacion: '2024-01-15',
+    fechaVencimiento: '2024-01-19'
+  },
 ];
 
 // Componente para Contador Animado
@@ -88,6 +161,15 @@ const LandingPage: React.FC<LandingPageProps> = ({
   const [productFilter, setProductFilter] = useState<'all' | 'Compra Solidaria' | 'Ayuda Social'>('all');
   const navigate = useNavigate();
 
+  // Definir las frases animadas para el hero
+  const heroPhrases = [
+    "Tu plataforma para combatir el desperdicio de alimentos.",
+    "Conecta, comparte y consume de forma sostenible.",
+    "Transforma excedentes en oportunidades.",
+    "Únete a la revolución alimentaria sostenible.",
+    "Salva alimentos, nutre comunidades."
+  ];
+
   useEffect(() => {
     if (scrollToProducts) {
       const timeout = setTimeout(() => setCurrentSlide(0), 300);
@@ -144,7 +226,10 @@ const LandingPage: React.FC<LandingPageProps> = ({
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-xl md:text-2xl text-[#1d311e] font-semibold max-w-3xl mx-auto mb-10"
           >
-            Tu plataforma para combatir el desperdicio de alimentos. <br className="hidden sm:block"/>Conecta, comparte y consume de forma sostenible.
+            <AnimatedHeroText 
+              words={heroPhrases}
+              className="text-xl md:text-2xl text-[#1d311e] font-semibold"
+            />
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -237,7 +322,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             <div className="relative">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {displayedProducts.map(product => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} user={null} />
               ))}
 
                 </div>

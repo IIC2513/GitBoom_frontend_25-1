@@ -18,6 +18,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import ReservasDeMisProductosPage from './pages/ReservasDeMisProductosPage';
 import ValoracionesPage from './pages/ValoracionesPage';
 import ValoracionesListPage from './pages/ValoracionesListPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -29,6 +30,32 @@ interface Usuario {
   direccion?: string;
   rol: 'usuario' | 'admin';
   fotoPerfil?: string;
+}
+
+// Decodificar JWT para extraer el rol
+function getRoleFromToken(token: string | null): 'usuario' | 'admin' | null {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.rol || null;
+  } catch {
+    return null;
+  }
+}
+
+// Componente para proteger rutas solo para admin
+function AdminRoute({ user, children }: { user: Usuario | null; children: React.ReactNode }) {
+  if (!user) return <Navigate to="/auth" />;
+  if (user.rol !== 'admin') {
+    return <div className="p-8 text-center text-red-600 font-bold text-xl">Acceso denegado: solo para administradores.</div>;
+  }
+  return <>{children}</>;
+}
+
+// Componente para proteger rutas autenticadas
+function ProtectedRoute({ user, children }: { user: Usuario | null; children: React.ReactNode }) {
+  if (!user) return <Navigate to="/auth" />;
+  return <>{children}</>;
 }
 
 function App() {
@@ -86,28 +113,35 @@ function App() {
             <Route path="/auth" element={<AuthPage onAuthSuccess={handleAuthSuccess} />} />
             <Route 
               path="/perfil" 
-              element={user ? <ProfilePage user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} 
+              element={
+                <ProtectedRoute user={user}>
+                  <ProfilePage user={user!} onLogout={handleLogout} />
+                </ProtectedRoute>
+              }
             />
             <Route 
               path="/crear-producto" 
-              element={user ? <CreateProductPage /> : <Navigate to="/auth" />} 
+              element={
+                <ProtectedRoute user={user}>
+                  <CreateProductPage />
+                </ProtectedRoute>
+              }
             />
             <Route path="/productos/editar/:id_producto" element={<EditProductPage user={user} />} />
             <Route path="/productos/:id_producto" element={<ProductDetailPage user={user} />} />
-            <Route path="/mis-reservas" element={<MyReservationsPage />} />
+            <Route path="/mis-reservas" element={<ProtectedRoute user={user}><MyReservationsPage /></ProtectedRoute>} />
             <Route 
               path="/perfil/editar"
-              element={user ? (
-                <EditProfilePage
-                  user={user}
-                  onProfileUpdate={handleProfileUpdate}
-                />
-              ) : <Navigate to="/auth" />}
+              element={
+                <ProtectedRoute user={user}>
+                  <EditProfilePage user={user!} onProfileUpdate={handleProfileUpdate} />
+                </ProtectedRoute>
+              }
             />
-            <Route path="/reservas-de-mis-productos" element={<ReservasDeMisProductosPage />} />
+            <Route path="/reservas-de-mis-productos" element={<ProtectedRoute user={user}><ReservasDeMisProductosPage /></ProtectedRoute>} />
             <Route path="/producto/:id_producto/valoraciones" element={<ValoracionesPage />} />
             <Route path="/productos/:id/valoraciones" element={<ValoracionesListPage />} />
-
+            <Route path="/admin-dashboard" element={<AdminRoute user={user}><AdminDashboardPage /></AdminRoute>} />
           </Routes>
         </main>
         <Footer />

@@ -190,8 +190,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-[#1d311e]">{user.nombre}</h1>
-                <span className={`px-3 py-1 rounded-full text-sm ${
-                  user.rol === 'admin' ? 'bg-gray-100 text-gray-800' : 'bg-gray-100 text-gray-800'
+                <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                  user.rol === 'admin' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-800'
                 }`}>
                   {user.rol === 'admin' ? 'Administrador' : 'Usuario'}
                 </span>
@@ -323,7 +323,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
           </div>
         </div>
 
-        {/* Sección de Cerrar Sesión */}
+        {/* Sección de Cerrar Sesión y Dashboard Admin */}
+        {user.rol === 'admin' && (
+          <button
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.preventDefault(); navigate('/admin-dashboard'); }}
+            className="w-full flex items-center justify-center space-x-2 mb-4 py-3 bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:from-red-700 hover:to-pink-600 transition-all text-lg"
+          >
+            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13h2l.4 2M7 13h10l1.4 2M17 13h2m-9 4h4m-2-4V7m0 0L5 7m7 0l7 0" /></svg>
+            Dashboard Administrador
+          </button>
+        )}
         <div className="bg-white rounded-lg shadow-md p-6">
           <button
             onClick={onLogout}

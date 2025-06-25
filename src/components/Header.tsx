@@ -79,6 +79,9 @@ const Header: React.FC<HeaderProps> = ({
               >
                 <User className="w-5 h-5" />
                 <span>Mi ReMeal</span>
+                {user.rol === 'admin' && (
+                  <span className="ml-2 px-2 py-0.5 bg-red-600 text-xs rounded text-white font-bold">ADMIN</span>
+                )}
               </Link>
             </div>
           ) : (

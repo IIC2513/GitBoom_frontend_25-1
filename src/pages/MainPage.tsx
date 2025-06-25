@@ -135,9 +135,14 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
     fetchProducts();
   }, []);
 
-  const filteredRawProducts = products.filter(p => 
-    (productFilter === 'all' || p.categoria === productFilter) && p.estado === 'disponible'
-  );
+  const filteredRawProducts = products
+    .filter(p => productFilter === 'all' || p.categoria === productFilter)
+    .sort((a, b) => {
+      // Primero los disponibles, luego los agotados
+      if (a.estado === 'disponible' && b.estado !== 'disponible') return -1;
+      if (a.estado !== 'disponible' && b.estado === 'disponible') return 1;
+      return 0;
+    });
 
   const productsPerPageInList = 6; 
   const totalProductListPages = Math.ceil(filteredRawProducts.length / productsPerPageInList);

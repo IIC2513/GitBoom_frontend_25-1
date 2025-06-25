@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import TeamMemberCard from '../components/TeamMemberCard';
 import victoriaImg from '../assets/victoria.jpeg';
 import maxImg from '../assets/max.jpg';
@@ -26,6 +27,12 @@ const teamMembers = [
 ];
 
 const AboutUsPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleJoinCause = () => {
+    navigate('/auth');
+  };
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -76,7 +83,10 @@ const AboutUsPage: React.FC = () => {
             con aquellos que pueden aprovecharlos. Creemos que pequeñas 
             acciones pueden generar grandes cambios para nuestro planeta.
           </p>
-          <button className="px-6 py-3 bg-[#a4c766] text-[#1d311e] font-medium rounded-lg hover:bg-opacity-90 transition-colors duration-200">
+          <button 
+            onClick={handleJoinCause}
+            className="px-6 py-3 bg-[#a4c766] text-[#1d311e] font-medium rounded-lg hover:bg-opacity-90 transition-colors duration-200"
+          >
             Únete a Nuestra Causa
           </button>
         </div>
