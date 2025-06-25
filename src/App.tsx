@@ -15,6 +15,9 @@ import EditProductPage from './pages/EditProductPage';
 import EditProfilePage from './pages/EditProfilePage';
 import MyReservationsPage from './pages/MyReservationsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import ReservasDeMisProductosPage from './pages/ReservasDeMisProductosPage';
+import ValoracionesPage from './pages/ValoracionesPage';
+import ValoracionesListPage from './pages/ValoracionesListPage';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -101,6 +104,10 @@ function App() {
                 />
               ) : <Navigate to="/auth" />}
             />
+            <Route path="/reservas-de-mis-productos" element={<ReservasDeMisProductosPage />} />
+            <Route path="/producto/:id_producto/valoraciones" element={<ValoracionesPage />} />
+            <Route path="/productos/:id/valoraciones" element={<ValoracionesListPage />} />
+
           </Routes>
         </main>
         <Footer />

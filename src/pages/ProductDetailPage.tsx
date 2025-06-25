@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import ValoracionForm from '../components/ValoracionForm'; // o la ruta correspondiente
+
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
 
@@ -53,8 +55,9 @@ const ProductDetailPage: React.FC<Props> = ({ user }) => {
       <p className="mt-2 text-gray-600">Estado: {product.estado}</p>
       <p className="mt-2 text-gray-600">Ubicación: {product.ubicacion}</p>
       {product.categoria === 'Compra Solidaria' && (
-        <p className="mt-4 text-xl font-bold text-[#557e35]">${product.precio.toLocaleString('es-CL')}</p>
+      <p className="mt-4 text-xl font-bold text-[#557e35]">${product.precio.toLocaleString('es-CL')}</p>
       )}
+      <ValoracionForm id_producto={product.id_producto} id_reserva={"aquí-id-valido-o-ficticio"} />
     </div>
   );
 };

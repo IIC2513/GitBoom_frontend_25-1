@@ -234,6 +234,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onLogout }) => {
               Mis Productos
             </h2>
             <button 
+              onClick={() => navigate('/reservas-de-mis-productos')}
+              className="flex items-center justify-center space-x-2 border border-[#557e35] text-[#557e35] hover:bg-[#e8f5e9] transition-colors py-2 px-4 rounded-md text-sm font-medium"
+              >
+              Ver reservas sobre mis productos
+            </button>           
+            <button 
               onClick={() => navigate('/crear-producto')}
               className="border border-[#557e35] text-[#557e35] bg-white px-4 py-2 rounded-md font-semibold hover:bg-[#e8f5e9] transition-colors"
             >
