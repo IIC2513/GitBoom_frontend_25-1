@@ -171,6 +171,32 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
     };
   }, []);
   
+  useEffect(() => {
+    const handleProductoActualizado = (productoActualizado: Product) => {
+      const normalizado = {
+        ...productoActualizado,
+        seller_name: productoActualizado.Usuario?.nombre ?? 'Usuario desconocido',
+        image: productoActualizado.imagen_url,
+        ubicacion: productoActualizado.ubicacion ?? 'Ubicación no disponible',
+        estado: productoActualizado.estado ?? 'desconocido',
+        cantidad: productoActualizado.cantidad ?? 0,
+        precio: productoActualizado.precio ?? 0,
+        fechaVencimiento: productoActualizado.fecha_expiracion ?? null,
+        fechaPublicacion: productoActualizado.fecha_publicacion ?? null,
+      };
+  
+      setProducts((prev) =>
+        prev.map((p) => (p.id_producto === normalizado.id_producto ? normalizado : p))
+      );
+    };
+  
+    socket.on("producto:actualizado", handleProductoActualizado);
+    return () => {
+      socket.off("producto:actualizado", handleProductoActualizado);
+    };
+  }, []);
+  
+  
 
   const filteredRawProducts = products
     .filter(p => productFilter === 'all' || p.categoria === productFilter)

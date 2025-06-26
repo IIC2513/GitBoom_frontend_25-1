@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMoreVertical, FiEdit, FiTrash2, FiX, FiClock, FiPackage, FiMapPin, FiUser, FiCalendar, FiMessageSquare } from 'react-icons/fi';
 import ReservaModal from './ReservaModal';
+import { useNavigate } from 'react-router-dom';
+
 
 // Interfaces y el resto del componente ProductCard (sin cambios)
 interface Product {
@@ -36,6 +38,8 @@ const ProductCard = ({ product: initialProduct, user }: ProductCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Este estado ahora controla nuestro modal aesthetic
   const menuRef = useRef<HTMLDivElement>(null);
   const [puedeOpinar, setPuedeOpinar] = useState(false);
+  const navigate = useNavigate();
+
 
   // ... (toda la lógica de hooks y handlers permanece igual)
   useEffect(() => {
@@ -63,7 +67,10 @@ const ProductCard = ({ product: initialProduct, user }: ProductCardProps) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen]);
 
-  const handleEdit = () => alert(`Editar producto ${product.id}`);
+  const handleEdit = () => {
+    navigate(`/productos/editar/${product.id}`);
+  };
+  
   const handleDelete = async () => {
     const confirmacion = window.confirm("¿Estás seguro de que quieres eliminar este producto?");
     if (!confirmacion) return;
@@ -254,6 +261,9 @@ const ProductCard = ({ product: initialProduct, user }: ProductCardProps) => {
                       <span>Deja tu opinión</span>
                     </button>
                   )}
+
+            
+
                   <button
                     onClick={() => window.location.href = `/productos/${product.id}/valoraciones`}
                     className="w-full bg-gray-100 text-gray-700 py-3 px-5 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
