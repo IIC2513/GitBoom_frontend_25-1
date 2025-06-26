@@ -108,70 +108,15 @@ El panel de administrador permite gestionar toda la plataforma REMeal con las si
 - Desde el perfil de usuario, aparece un botón "Dashboard" para admins
 - URL: `/admin` (protegida)
 
-### Funcionalidades Disponibles
-
-#### 📊 Dashboard Principal
-- **Estadísticas generales**: Usuarios totales, productos activos, reservas, valoraciones
-- **Gráficos de actividad**: Tendencias de uso de la plataforma
-- **Métricas de impacto**: Alimentos salvados, donaciones realizadas
-
-#### 👥 Gestión de Usuarios
-- **Lista completa de usuarios** registrados en la plataforma
-- **Información detallada**: Nombre, email, fecha de registro, estado
-- **Filtros y búsqueda** por nombre o email
-- **Acciones de gestión**: Ver perfil, historial de actividad
-
-#### 📦 Gestión de Productos
-- **Catálogo completo** de productos publicados
-- **Información detallada**: Nombre, descripción, precio, categoría, estado
-- **Filtros por categoría**: Compra Solidaria / Ayuda Social
-- **Gestión de estados**: Disponible, reservado, entregado, expirado
-- **Acciones**: Ver detalles, editar, eliminar productos
-
-#### 📅 Gestión de Reservas
-- **Lista de todas las reservas** realizadas en la plataforma
-- **Información completa**: Producto, usuario que reserva, fecha, estado
-- **Filtros por estado**: Pendiente, confirmada, completada, cancelada
-- **Gestión de reservas**: Confirmar, cancelar, marcar como completada
-
-#### ⭐ Gestión de Valoraciones
-- **Todas las valoraciones** dejadas por usuarios
-- **Información detallada**: Usuario, producto, puntuación, comentario, fecha
-- **Filtros por puntuación**: 1-5 estrellas
-- **Moderación**: Revisar y gestionar valoraciones inapropiadas
-
-#### 📈 Estadísticas Detalladas
-- **Métricas de usuarios**: Registros por período, usuarios activos
-- **Métricas de productos**: Publicaciones por categoría, productos salvados
-- **Métricas de impacto**: Kilos de alimentos salvados, donaciones realizadas
-- **Gráficos interactivos**: Tendencias temporales, distribución geográfica
-
-#### 🔍 Logs de Actividad
-- **Registro completo** de todas las acciones en la plataforma
-- **Información detallada**: Usuario, acción, timestamp, detalles
-- **Filtros por tipo**: Registros, login, publicaciones, reservas
-- **Auditoría**: Seguimiento de actividad para seguridad y análisis
-
-### Características Técnicas
-- **Interfaz responsive**: Funciona en desktop y móvil
-- **Navegación intuitiva**: Tabs organizados por funcionalidad
-- **Búsqueda y filtros**: Encuentra información rápidamente
-- **Acciones en tiempo real**: Cambios reflejados inmediatamente
-- **Protección de rutas**: Solo accesible para administradores
-
-### Uso Recomendado
-1. **Monitoreo diario**: Revisar estadísticas y actividad reciente
-2. **Gestión semanal**: Revisar usuarios nuevos y productos publicados
-3. **Moderación continua**: Gestionar valoraciones y reportes
-4. **Análisis mensual**: Revisar métricas de impacto y tendencias
-
 ### Credenciales de Administrador
 Para acceder al panel de administrador, usa las siguientes credenciales:
 
-**Email:** `admin@remeal.com`  
-**Contraseña:** `admin123`
+**Email:** `admin@admin.com`  
+**Contraseña:** `Admin1234!`
 
-**Nota:** Estas credenciales son para propósitos de desarrollo y corrección. En producción, se deben usar credenciales seguras.
+**Nota:** Estas credenciales las ponemos aca solo con el propósito de facilitar la corrección al ayudante. Sabemos que en un caso real no hay que hacer esto.
+
+
 
 ---
 
