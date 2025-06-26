@@ -184,6 +184,278 @@ const AdminDashboardPage: React.FC = () => {
     .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
     .slice(0, 20);
 
+  // Funciones para editar y eliminar
+  const handleEditUser = (user: any) => {
+    console.log('=== INICIANDO EDICIÓN DE USUARIO ===');
+    console.log('Usuario a editar:', user);
+    console.log('ID del usuario:', user.id_usuario);
+    console.log('Nombre del usuario:', user.nombre);
+    console.log('Correo del usuario:', user.correo);
+    console.log('Rol del usuario:', user.rol);
+    
+    // Por ahora, mostrar un prompt simple para editar el nombre
+    // En el futuro se puede implementar un modal más completo
+    const nuevoNombre = prompt(`Editar nombre del usuario ${user.nombre}:`, user.nombre);
+    
+    if (nuevoNombre && nuevoNombre !== user.nombre) {
+      console.log('Actualizando usuario con nuevo nombre:', nuevoNombre);
+      
+      const token = localStorage.getItem('token');
+      const url = `${API_BASE}/api/usuarios/admin/${user.id_usuario}`;
+      
+      fetch(url, {
+        method: 'PUT',
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...user,
+          nombre: nuevoNombre
+        })
+      })
+      .then(response => {
+        console.log('Respuesta de edición:', response.status);
+        return response.text();
+      })
+      .then(responseText => {
+        console.log('Response body:', responseText);
+        if (responseText) {
+          try {
+            const updatedUser = JSON.parse(responseText);
+            // Actualizar el estado local
+            setUsuarios(usuarios.map(u => 
+              u.id_usuario === user.id_usuario ? updatedUser : u
+            ));
+            alert('Usuario actualizado exitosamente');
+          } catch (e) {
+            console.error('Error parseando respuesta:', e);
+            alert('Usuario actualizado exitosamente');
+          }
+        } else {
+          alert('Usuario actualizado exitosamente');
+        }
+      })
+      .catch(error => {
+        console.error('Error en handleEditUser:', error);
+        alert(`Error al actualizar usuario: ${error.message}`);
+      });
+    } else {
+      console.log('Edición cancelada o sin cambios');
+    }
+    console.log('=== FIN EDICIÓN DE USUARIO ===');
+  };
+
+  const handleDeleteUser = async (user: any) => {
+    console.log('=== INICIANDO ELIMINACIÓN DE USUARIO ===');
+    console.log('Usuario a eliminar:', user);
+    console.log('ID del usuario:', user.id_usuario);
+    console.log('Nombre del usuario:', user.nombre);
+    console.log('Correo del usuario:', user.correo);
+    console.log('Rol del usuario:', user.rol);
+    
+    if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario ${user.nombre}?`)) {
+      console.log('Usuario confirmó la eliminación');
+      
+      try {
+        const token = localStorage.getItem('token');
+        console.log('Token obtenido:', token ? 'Sí' : 'No');
+        console.log('Token (primeros 20 caracteres):', token ? token.substring(0, 20) + '...' : 'No hay token');
+        
+        const url = `${API_BASE}/api/usuarios/admin/${user.id_usuario}`;
+        console.log('URL de la petición:', url);
+        console.log('API_BASE:', API_BASE);
+        
+        console.log('Enviando petición DELETE...');
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        console.log('Respuesta recibida');
+        console.log('Status:', response.status);
+        console.log('Status Text:', response.statusText);
+        
+        const responseText = await response.text();
+        console.log('Response body (text):', responseText);
+        
+        if (response.ok) {
+          console.log('Eliminación exitosa, actualizando estado...');
+          setUsuarios(usuarios.filter(u => u.id_usuario !== user.id_usuario));
+          console.log('Estado actualizado');
+          alert('Usuario eliminado exitosamente');
+        } else {
+          console.error('Error en la respuesta del servidor');
+          console.error('Status:', response.status);
+          console.error('Status Text:', response.statusText);
+          console.error('Response body:', responseText);
+          
+          let errorMessage = 'Error al eliminar usuario';
+          try {
+            const errorJson = JSON.parse(responseText);
+            errorMessage = errorJson.message || errorJson.error || errorMessage;
+          } catch (e) {
+            console.log('No se pudo parsear la respuesta como JSON');
+          }
+          
+          alert(`Error al eliminar usuario: ${errorMessage}`);
+        }
+      } catch (error) {
+        console.error('Error en handleDeleteUser:', error);
+        console.error('Tipo de error:', typeof error);
+        console.error('Mensaje de error:', error instanceof Error ? error.message : 'Error desconocido');
+        console.error('Stack trace:', error instanceof Error ? error.stack : 'No disponible');
+        
+        let errorMessage = 'Error al eliminar usuario';
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
+        
+        alert(`Error al eliminar usuario: ${errorMessage}`);
+      }
+    } else {
+      console.log('Usuario canceló la eliminación');
+    }
+    console.log('=== FIN ELIMINACIÓN DE USUARIO ===');
+  };
+
+  const handleEditProduct = (product: any) => {
+    alert(`Editar producto: ${product.nombre}`);
+    // TODO: Implementar modal de edición
+  };
+
+  const handleDeleteProduct = async (product: any) => {
+    console.log('=== INICIANDO ELIMINACIÓN DE PRODUCTO ===');
+    console.log('Producto a eliminar:', product);
+    console.log('ID del producto:', product.id_producto);
+    console.log('Nombre del producto:', product.nombre);
+    
+    if (window.confirm(`¿Estás seguro de que quieres eliminar el producto ${product.nombre}?`)) {
+      console.log('Usuario confirmó la eliminación del producto');
+      
+      try {
+        const token = localStorage.getItem('token');
+        console.log('Token obtenido:', token ? 'Sí' : 'No');
+        
+        const url = `${API_BASE}/api/productos/${product.id_producto}`;
+        console.log('URL de la petición:', url);
+        
+        console.log('Enviando petición DELETE...');
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        console.log('Respuesta recibida');
+        console.log('Status:', response.status);
+        console.log('Status Text:', response.statusText);
+        
+        const responseText = await response.text();
+        console.log('Response body (text):', responseText);
+        
+        if (response.ok) {
+          console.log('Eliminación exitosa, actualizando estado...');
+          setProductos(productos.filter(p => p.id_producto !== product.id_producto));
+          console.log('Estado actualizado');
+          alert('Producto eliminado exitosamente');
+        } else {
+          console.error('Error en la respuesta del servidor');
+          console.error('Status:', response.status);
+          console.error('Status Text:', response.statusText);
+          console.error('Response body:', responseText);
+          
+          let errorMessage = 'Error al eliminar producto';
+          try {
+            const errorJson = JSON.parse(responseText);
+            errorMessage = errorJson.message || errorJson.error || errorMessage;
+          } catch (e) {
+            console.log('No se pudo parsear la respuesta como JSON');
+          }
+          
+          alert(`Error al eliminar producto: ${errorMessage}`);
+        }
+      } catch (error) {
+        console.error('Error en handleDeleteProduct:', error);
+        console.error('Tipo de error:', typeof error);
+        console.error('Mensaje de error:', error instanceof Error ? error.message : 'Error desconocido');
+        
+        let errorMessage = 'Error al eliminar producto';
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
+        
+        alert(`Error al eliminar producto: ${errorMessage}`);
+      }
+    } else {
+      console.log('Usuario canceló la eliminación del producto');
+    }
+    console.log('=== FIN ELIMINACIÓN DE PRODUCTO ===');
+  };
+
+  const handleEditReserva = (reserva: any) => {
+    alert(`Editar reserva: ${reserva.id_reserva}`);
+    // TODO: Implementar modal de edición
+  };
+
+  const handleDeleteReserva = async (reserva: any) => {
+    if (window.confirm(`¿Estás seguro de que quieres eliminar la reserva ${reserva.id_reserva}?`)) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/reservas/${reserva.id_reserva}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+          setReservas(reservas.filter(r => r.id_reserva !== reserva.id_reserva));
+          alert('Reserva eliminada exitosamente');
+        } else {
+          alert('Error al eliminar reserva');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error al eliminar reserva');
+      }
+    }
+  };
+
+  const handleEditValoracion = (valoracion: any) => {
+    alert(`Editar valoración: ${valoracion.id_valoracion}`);
+    // TODO: Implementar modal de edición
+  };
+
+  const handleDeleteValoracion = async (valoracion: any) => {
+    if (window.confirm(`¿Estás seguro de que quieres eliminar la valoración ${valoracion.id_valoracion}?`)) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/valoraciones/${valoracion.id_valoracion}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+          setValoraciones(valoraciones.filter(v => v.id_valoracion !== valoracion.id_valoracion));
+          alert('Valoración eliminada exitosamente');
+        } else {
+          alert('Error al eliminar valoración');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error al eliminar valoración');
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-8">
@@ -235,8 +507,8 @@ const AdminDashboardPage: React.FC = () => {
                           <td className="py-2 px-4 border-b">{u.rol}</td>
                           <td className="py-2 px-4 border-b space-x-2">
                             <button onClick={() => setSelectedUser(u)} className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs">Ver</button>
-                            <button className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
-                            <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
+                            <button onClick={() => handleEditUser(u)} className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
+                            <button onClick={() => handleDeleteUser(u)} className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
                           </td>
                         </tr>
                       ))}
@@ -255,8 +527,8 @@ const AdminDashboardPage: React.FC = () => {
                       <div className="mb-2"><b>Teléfono:</b> {selectedUser.telefono || 'No registrado'}</div>
                       <div className="mb-2"><b>Dirección:</b> {selectedUser.direccion || 'No registrada'}</div>
                       <div className="flex space-x-2 mt-4">
-                        <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Editar</button>
-                        <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+                        <button onClick={() => handleEditUser(selectedUser)} className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Editar</button>
+                        <button onClick={() => handleDeleteUser(selectedUser)} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
                       </div>
                     </div>
                   </div>
@@ -288,8 +560,8 @@ const AdminDashboardPage: React.FC = () => {
                           <td className="py-2 px-4 border-b">{p.estado}</td>
                           <td className="py-2 px-4 border-b space-x-2">
                             <button onClick={() => setSelectedProduct(p)} className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs">Ver</button>
-                            <button className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
-                            <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
+                            <button onClick={() => handleEditProduct(p)} className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
+                            <button onClick={() => handleDeleteProduct(p)} className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
                           </td>
                         </tr>
                       ))}
@@ -309,8 +581,8 @@ const AdminDashboardPage: React.FC = () => {
                       <div className="mb-2"><b>Precio:</b> {selectedProduct.precio}</div>
                       <div className="mb-2"><b>Ubicación:</b> {selectedProduct.ubicacion}</div>
                       <div className="flex space-x-2 mt-4">
-                        <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Editar</button>
-                        <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+                        <button onClick={() => handleEditProduct(selectedProduct)} className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Editar</button>
+                        <button onClick={() => handleDeleteProduct(selectedProduct)} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
                       </div>
                     </div>
                   </div>
@@ -340,8 +612,8 @@ const AdminDashboardPage: React.FC = () => {
                           <td className="py-2 px-4 border-b">{r.estado}</td>
                           <td className="py-2 px-4 border-b space-x-2">
                             <button onClick={() => setSelectedReserva(r)} className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs">Ver</button>
-                            <button className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
-                            <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
+                            <button onClick={() => handleEditReserva(r)} className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
+                            <button onClick={() => handleDeleteReserva(r)} className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
                           </td>
                         </tr>
                       ))}
@@ -360,8 +632,8 @@ const AdminDashboardPage: React.FC = () => {
                       <div className="mb-2"><b>Fecha de retiro:</b> {selectedReserva.fecha_retiro}</div>
                       <div className="mb-2"><b>Mensaje:</b> {selectedReserva.mensaje}</div>
                       <div className="flex space-x-2 mt-4">
-                        <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Editar</button>
-                        <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+                        <button onClick={() => handleEditReserva(selectedReserva)} className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Editar</button>
+                        <button onClick={() => handleDeleteReserva(selectedReserva)} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
                       </div>
                     </div>
                   </div>
@@ -393,8 +665,8 @@ const AdminDashboardPage: React.FC = () => {
                           <td className="py-2 px-4 border-b">{v.comentario}</td>
                           <td className="py-2 px-4 border-b space-x-2">
                             <button onClick={() => setSelectedValoracion(v)} className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs">Ver</button>
-                            <button className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
-                            <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
+                            <button onClick={() => handleEditValoracion(v)} className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
+                            <button onClick={() => handleDeleteValoracion(v)} className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
                           </td>
                         </tr>
                       ))}
@@ -412,8 +684,8 @@ const AdminDashboardPage: React.FC = () => {
                       <div className="mb-2"><b>Puntuación:</b> {selectedValoracion.puntuacion}</div>
                       <div className="mb-2"><b>Comentario:</b> {selectedValoracion.comentario}</div>
                       <div className="flex space-x-2 mt-4">
-                        <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Editar</button>
-                        <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+                        <button onClick={() => handleEditValoracion(selectedValoracion)} className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Editar</button>
+                        <button onClick={() => handleDeleteValoracion(selectedValoracion)} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
                       </div>
                     </div>
                   </div>

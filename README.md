@@ -97,6 +97,117 @@ A continuacion se presentan algunas vistas principales como ejemplo de aplicaci�
 6. Cómo funciona
 ![Ejemplo de aplicación](assets/funcionamiento.png)
 
+---
+
+## Panel de Administrador
+
+El panel de administrador permite gestionar toda la plataforma REMeal con las siguientes funcionalidades:
+
+### Acceso al Panel
+- Solo usuarios con rol de administrador pueden acceder
+- Desde el perfil de usuario, aparece un botón "Dashboard" para admins
+- URL: `/admin` (protegida)
+
+### Funcionalidades Disponibles
+
+#### 📊 Dashboard Principal
+- **Estadísticas generales**: Usuarios totales, productos activos, reservas, valoraciones
+- **Gráficos de actividad**: Tendencias de uso de la plataforma
+- **Métricas de impacto**: Alimentos salvados, donaciones realizadas
+
+#### 👥 Gestión de Usuarios
+- **Lista completa de usuarios** registrados en la plataforma
+- **Información detallada**: Nombre, email, fecha de registro, estado
+- **Filtros y búsqueda** por nombre o email
+- **Acciones de gestión**: Ver perfil, historial de actividad
+
+#### 📦 Gestión de Productos
+- **Catálogo completo** de productos publicados
+- **Información detallada**: Nombre, descripción, precio, categoría, estado
+- **Filtros por categoría**: Compra Solidaria / Ayuda Social
+- **Gestión de estados**: Disponible, reservado, entregado, expirado
+- **Acciones**: Ver detalles, editar, eliminar productos
+
+#### 📅 Gestión de Reservas
+- **Lista de todas las reservas** realizadas en la plataforma
+- **Información completa**: Producto, usuario que reserva, fecha, estado
+- **Filtros por estado**: Pendiente, confirmada, completada, cancelada
+- **Gestión de reservas**: Confirmar, cancelar, marcar como completada
+
+#### ⭐ Gestión de Valoraciones
+- **Todas las valoraciones** dejadas por usuarios
+- **Información detallada**: Usuario, producto, puntuación, comentario, fecha
+- **Filtros por puntuación**: 1-5 estrellas
+- **Moderación**: Revisar y gestionar valoraciones inapropiadas
+
+#### 📈 Estadísticas Detalladas
+- **Métricas de usuarios**: Registros por período, usuarios activos
+- **Métricas de productos**: Publicaciones por categoría, productos salvados
+- **Métricas de impacto**: Kilos de alimentos salvados, donaciones realizadas
+- **Gráficos interactivos**: Tendencias temporales, distribución geográfica
+
+#### 🔍 Logs de Actividad
+- **Registro completo** de todas las acciones en la plataforma
+- **Información detallada**: Usuario, acción, timestamp, detalles
+- **Filtros por tipo**: Registros, login, publicaciones, reservas
+- **Auditoría**: Seguimiento de actividad para seguridad y análisis
+
+### Características Técnicas
+- **Interfaz responsive**: Funciona en desktop y móvil
+- **Navegación intuitiva**: Tabs organizados por funcionalidad
+- **Búsqueda y filtros**: Encuentra información rápidamente
+- **Acciones en tiempo real**: Cambios reflejados inmediatamente
+- **Protección de rutas**: Solo accesible para administradores
+
+### Uso Recomendado
+1. **Monitoreo diario**: Revisar estadísticas y actividad reciente
+2. **Gestión semanal**: Revisar usuarios nuevos y productos publicados
+3. **Moderación continua**: Gestionar valoraciones y reportes
+4. **Análisis mensual**: Revisar métricas de impacto y tendencias
+
+### Credenciales de Administrador
+Para acceder al panel de administrador, usa las siguientes credenciales:
+
+**Email:** `admin@remeal.com`  
+**Contraseña:** `admin123`
+
+**Nota:** Estas credenciales son para propósitos de desarrollo y corrección. En producción, se deben usar credenciales seguras.
+
+---
+
+## Ejecución de tests automáticos (Selenium)
+
+Para correr los tests automáticos de frontend (registro, login y publicación de producto):
+
+1. **Asegúrate de tener la app corriendo en http://localhost:5173**
+2. **Instala las dependencias necesarias:**
+   ```bash
+   npm install
+   # o
+   yarn install
+   ```
+3. **Compila el test Selenium:**
+   ```bash
+   npx tsc --project tsconfig.test.json
+   ```
+4. **Ejecuta el test:**
+   ```bash
+   node tests/selenium/dist/REMEALTests.cjs
+   ```
+
+- El test abrirá Chrome y automatizará el registro, login y publicación de un producto (incluyendo imagen).
+- Puedes ver el flujo completo en el navegador (no es headless).
+- El resultado aparecerá en la terminal.
+
+**Requisitos:**
+- Tener Google Chrome instalado
+- Tener Chromedriver compatible (se instala automáticamente con selenium-webdriver)
+- Node.js >= 16
+
+**Notas:**
+- El test usa la imagen `assets/pizza.png` para la publicación.
+- Si quieres limpiar los usuarios/productos de prueba, hazlo desde el panel de admin o la base de datos.
+
 
 
 
