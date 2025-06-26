@@ -64,7 +64,38 @@ const ProductCard = ({ product: initialProduct, user }: ProductCardProps) => {
   }, [isMenuOpen]);
 
   const handleEdit = () => alert(`Editar producto ${product.id}`);
-  const handleDelete = () => alert(`Funcionalidad para eliminar el producto ${product.id} no implementada.`);
+  const handleDelete = async () => {
+    const confirmacion = window.confirm("¿Estás seguro de que quieres eliminar este producto?");
+    if (!confirmacion) return;
+  
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/productos/${product.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Error al eliminar el producto');
+      }
+  
+      alert("Producto eliminado correctamente.");
+  
+      // Emitir evento de WebSocket si quieres
+      // socket.emit("producto:eliminado", product.id);  <-- solo si haces algo en cliente
+  
+      // También puedes usar un callback o recargar la página:
+      window.location.reload();
+  
+    } catch (err) {
+      console.error('❌ Error eliminando producto:', err);
+      alert(`Error al eliminar producto: ${err.message}`);
+    }
+  };
+  
   const estaVencido = product.fechaVencimiento ? new Date(product.fechaVencimiento) < new Date() : false;
   
   // Función para formatear fechas de manera legible
