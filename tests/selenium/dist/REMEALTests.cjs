@@ -256,12 +256,6 @@ class REMEALTests {
             console.log(`\n📊 Resultados de las pruebas:`);
             console.log(`✅ Pruebas exitosas: ${passedTests}/${totalTests}`);
             console.log(`❌ Pruebas fallidas: ${totalTests - passedTests}/${totalTests}`);
-            if (passedTests >= 2) {
-                console.log('🎉 ¡BONUS ALCANZADO! Se cumplieron al menos 2 de 3 funcionalidades requeridas.');
-            }
-            else {
-                console.log('⚠️ No se alcanzó el mínimo requerido para el bonus.');
-            }
         }
         catch (error) {
             console.error('❌ Error general en las pruebas:', error);
