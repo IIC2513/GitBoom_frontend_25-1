@@ -1,6 +1,7 @@
 // src/pages/MainPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; 
+import socket from '../socket';
 import { useInView } from 'react-intersection-observer';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -134,6 +135,31 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
     };
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    socket.on("producto:nuevo", (nuevoProducto: Product) => {
+      console.log("🆕 Producto recibido por socket:", nuevoProducto);
+  
+      const productoNormalizado = {
+        ...nuevoProducto,
+        seller_name: nuevoProducto.Usuario?.nombre ?? 'Usuario desconocido',
+        image: nuevoProducto.imagen_url,
+        ubicacion: nuevoProducto.ubicacion ?? 'Ubicación no disponible',
+        estado: nuevoProducto.estado ?? 'desconocido',
+        cantidad: nuevoProducto.cantidad ?? 0,
+        precio: nuevoProducto.precio ?? 0,
+        fechaVencimiento: nuevoProducto.fecha_expiracion ?? null,
+        fechaPublicacion: nuevoProducto.fecha_publicacion ?? null,
+      };
+  
+      setProducts((prev) => [productoNormalizado, ...prev]);
+    });
+  
+    return () => {
+      socket.off("producto:nuevo");
+    };
+  }, []);
+  
 
   const filteredRawProducts = products
     .filter(p => productFilter === 'all' || p.categoria === productFilter)
