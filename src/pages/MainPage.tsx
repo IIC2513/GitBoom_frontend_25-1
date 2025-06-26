@@ -160,6 +160,17 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
     };
   }, []);
   
+  useEffect(() => {
+    socket.on("producto:eliminado", ({ id_producto }) => {
+      console.log("🗑 Producto eliminado vía socket:", id_producto);
+      setProducts(prev => prev.filter(p => p.id_producto !== id_producto));
+    });
+  
+    return () => {
+      socket.off("producto:eliminado");
+    };
+  }, []);
+  
 
   const filteredRawProducts = products
     .filter(p => productFilter === 'all' || p.categoria === productFilter)
