@@ -4,7 +4,7 @@
 
 ## Link Deploy
 
-https://remeal-app.netlify.app/
+https://gitboom-frontend.netlify.app/perfil
 
 ## Descripción general :thought_balloon:
 
