@@ -1,5 +1,6 @@
 // src/pages/MainPage.tsx
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import { motion, AnimatePresence } from 'framer-motion'; 
 import socket from '../socket';
 import { useInView } from 'react-intersection-observer';
@@ -137,6 +138,13 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
   }, []);
 
   useEffect(() => {
+    if (user?.id_usuario) {
+      socket.emit("registrar_usuario", user.id_usuario);
+    }
+  }, [user]);
+  
+
+  useEffect(() => {
     socket.on("producto:nuevo", (nuevoProducto: Product) => {
       console.log("🆕 Producto recibido por socket:", nuevoProducto);
   
@@ -195,6 +203,33 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
       socket.off("producto:actualizado", handleProductoActualizado);
     };
   }, []);
+
+  useEffect(() => {
+    const handleNuevaNotificacion = (noti: any) => {
+      console.log("🔔 Notificación recibida:", noti);
+  
+      Swal.fire({
+        title: '¡Tienes una nueva reserva!',
+        text: noti.mensaje,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Ver reservas',
+        cancelButtonText: 'Cerrar',
+        confirmButtonColor: '#557e35',
+        cancelButtonColor: '#ccc',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/reservas-de-mis-productos');
+        }
+      });
+    };
+  
+    socket.on("notificacion:nueva", handleNuevaNotificacion);
+    return () => {
+      socket.off("notificacion:nueva", handleNuevaNotificacion);
+    };
+  }, [navigate]);
+  
   
   
 
