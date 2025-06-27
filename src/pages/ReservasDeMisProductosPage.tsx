@@ -50,7 +50,7 @@ const ReservasDeMisProductosPage: React.FC = () => {
   const actualizarEstado = async (id: string, nuevoEstado: 'aceptada' | 'rechazada') => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`${API_BASE}/api/reservas/${id}`, {
+      await axios.put(`${API_BASE}/api/reservas/${id}/aprobar`, {
         estado: nuevoEstado,
       }, {
         headers: { Authorization: `Bearer ${token}` },

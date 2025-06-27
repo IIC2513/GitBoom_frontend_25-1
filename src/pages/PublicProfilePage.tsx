@@ -40,6 +40,7 @@ const PublicProfilePage: React.FC = () => {
       try {
         const res = await axios.get(`${API_BASE}/api/usuarios/${id}/publico`);
         setUsuario(res.data.usuario);
+        setProductos(res.data.usuario.productos_publicados || []);
       } catch (err) {
         setError('Error al cargar el perfil del usuario.');
       }
@@ -54,18 +55,8 @@ const PublicProfilePage: React.FC = () => {
       }
     };
 
-    const fetchProductos = async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/api/productos/usuario/${id}`);
-        setProductos(res.data);
-      } catch (err) {
-        console.error('Error cargando productos:', err);
-      }
-    };
-
     fetchPerfil();
     fetchValoraciones();
-    fetchProductos();
   }, [id]);
 
   const promedio = valoraciones.length
@@ -144,3 +135,5 @@ const PublicProfilePage: React.FC = () => {
 };
 
 export default PublicProfilePage;
+
+
