@@ -182,9 +182,15 @@ const ProductCard = ({ product: initialProduct, user }: ProductCardProps) => {
                   Reservar
                 </button>
               ) : (
-                <button disabled className="px-3 py-1.5 bg-gray-300 text-gray-600 text-xs font-medium rounded-md">
-                  Agotado
-                </button>
+                user && user.id_usuario === product.id_usuario ? (
+                  <button disabled className="px-3 py-1.5 bg-blue-200 text-blue-700 text-xs font-medium rounded-md">
+                    Producto propio
+                  </button>
+                ) : (
+                  <button disabled className="px-3 py-1.5 bg-gray-300 text-gray-600 text-xs font-medium rounded-md">
+                    Agotado
+                  </button>
+                )
               )}
             </div>
           </div>

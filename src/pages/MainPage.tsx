@@ -19,6 +19,7 @@ import {
   Package,
   Info,
 } from 'lucide-react';
+import { FiMapPin, FiCalendar, FiClock, FiPackage, FiUser } from 'react-icons/fi';
 
 import ProductCard from '../components/ProductCard';
 
@@ -259,6 +260,20 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
 
   const handleCloseProductModal = () => setSelectedProductModal(null);
 
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const renderLocation = (location: string) => {
+    if (location.length < 50) return location;
+    return location.slice(0, 50) + '...';
+  };
+
   if (loading) return <div className="flex justify-center items-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#557e35]"></div></div>;
   if (error) return <div className="flex justify-center items-center min-h-screen text-red-500 text-center">{error}</div>;
 
@@ -318,6 +333,11 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
                   <Marker key={product.id_producto} position={[product.lat, product.lng]}>
                     <Popup>
                       <div className="w-52">
+                        <img
+                          src={product.image}
+                          alt={product.nombre}
+                          className="w-full h-24 object-cover rounded mb-2"
+                        />
                         <h3 className="font-semibold text-[#1d311e] text-sm mb-1">{product.nombre}</h3>
                         <p className="text-xs text-gray-600 mb-1 line-clamp-2">{product.descripcion}</p>
                         <p className="text-xs font-medium text-[#557e35] mb-2">{product.categoria === 'Compra Solidaria' ? `$${product.precio.toLocaleString('es-CL')}` : 'GRATIS'}</p>
@@ -346,39 +366,70 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/60 z-[9999] flex justify-center items-center p-4"
       onClick={handleCloseProductModal}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        initial={{ scale: 0.95, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.95, y: 20 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row"
         onClick={e => e.stopPropagation()}
       >
-        <div className="p-6">
-          <div className="flex justify-between items-start mb-6">
-            <h2 className="text-2xl font-bold text-[#1d311e]">{selectedProductModal.nombre}</h2>
-            <button onClick={handleCloseProductModal} className="text-gray-500 hover:text-gray-700 transition-colors">
+        <div className="w-full md:w-1/2 h-64 md:h-auto">
+          <img src={selectedProductModal.image} alt={selectedProductModal.nombre} className="w-full h-full object-cover" />
+        </div>
+
+        <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto">
+          <div className="flex justify-between items-start mb-4">
+            <span className={`text-sm font-bold px-3 py-1.5 rounded-full ${selectedProductModal.categoria === 'Compra Solidaria' ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}`}>
+              {selectedProductModal.categoria}
+            </span>
+            <button onClick={handleCloseProductModal} className="p-2 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700">
               <X size={24} />
             </button>
           </div>
 
-          <img
-            src={selectedProductModal.image}
-            alt={selectedProductModal.nombre}
-            className="w-full h-64 object-cover rounded-lg shadow-md mb-6"
-          />
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 leading-tight mb-2">{selectedProductModal.nombre}</h2>
+          <p className="text-4xl font-bold text-[#557e35] mb-6">{selectedProductModal.categoria === 'Compra Solidaria' ? `$${selectedProductModal.precio.toLocaleString('es-CL')}` : 'GRATIS'}</p>
 
-          <p className="text-gray-700 mb-4">{selectedProductModal.descripcion}</p>
+          <p className="text-gray-600 mb-6">{selectedProductModal.descripcion ?? 'No hay descripción disponible.'}</p>
 
-          {/* ✅ BOTÓN VER VALORACIONES */}
-          <button
-            onClick={() => navigate(`/productos/${selectedProductModal.id_producto}`)}
-            className="text-sm text-blue-600 hover:underline"
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 border-t border-b border-gray-200 py-6 mb-6">
+            <div className="flex items-center gap-3 text-gray-700">
+              <FiMapPin size={65} className="text-green-600" />
+              <span><strong>Ubicación:</strong> {renderLocation(selectedProductModal.ubicacion)}</span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-700">
+              <FiCalendar size={30} className="text-green-600" />
+              <span><strong>Publicado:</strong> {formatDate(selectedProductModal.fecha_publicacion)}</span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-700">
+              <FiClock size={20} className="text-green-600" />
+              <span><strong>Estado:</strong> {selectedProductModal.estado ?? 'N/A'}</span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-700">
+              <FiPackage size={20} className="text-green-600" />
+              <span><strong>Cantidad:</strong> {selectedProductModal.cantidad ?? 'N/A'}</span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-700">
+              <FiCalendar size={20} className="text-red-500" />
+              <span><strong>Vence:</strong> {formatDate(selectedProductModal.fecha_expiracion)}</span>
+            </div>
+          </div>
+
+          <div
+            className="mt-4 flex items-center gap-3 cursor-pointer"
+            onClick={() => navigate(`/usuarios/${selectedProductModal.id_usuario}`)}
           >
-            Ver valoraciones
-          </button>
+            <div className="w-10 h-10 rounded-full bg-[#557e35] text-white flex items-center justify-center">
+              <FiUser size={30} />
+            </div>
+            <span className="text-[#557e35] font-bold text-2xl hover:underline">
+              {selectedProductModal.seller_name}
+            </span>
+          </div>
         </div>
       </motion.div>
     </motion.div>

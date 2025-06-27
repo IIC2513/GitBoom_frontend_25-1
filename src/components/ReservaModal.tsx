@@ -75,7 +75,17 @@ const ReservaModal: React.FC<ReservaModalProps> = ({
       // Opcional: ocultar mensaje verde tras unos segundos
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-      console.error(err);
+      console.error('=== ERROR RESERVA ===');
+      console.error('Error completo:', err);
+      console.error('Respuesta del backend:', err.response?.data);
+      console.error('Status:', err.response?.status);
+      console.error('Headers:', err.response?.headers);
+      console.error('Datos enviados:', {
+        id_producto,
+        fecha_retiro: fechaRetiro,
+        mensaje,
+      });
+      console.error('=== FIN ERROR RESERVA ===');
       setError('No se pudo crear la reserva.');
       setSuccess(false); // Limpia éxito si hubo error
     } finally {
@@ -94,6 +104,7 @@ const ReservaModal: React.FC<ReservaModalProps> = ({
           value={fechaRetiro}
           onChange={(e) => setFechaRetiro(e.target.value)}
           className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
+          min={new Date().toISOString().slice(0, 16)}
         />
 
         <label className="block mb-2 text-sm font-medium text-gray-700">Mensaje</label>
