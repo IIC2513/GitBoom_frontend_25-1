@@ -21,6 +21,7 @@ import ValoracionesListPage from './pages/ValoracionesListPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import PublicProfilePage from './pages/PublicProfilePage';
 
+import socket from './socket';
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
 interface Usuario {
@@ -93,6 +94,12 @@ function App() {
       setUser(parsed);
     }
   }, []);
+
+  useEffect(() => {
+    if (user?.id_usuario) {
+      socket.emit('registrar_usuario', user.id_usuario); // 🔗 importante
+    }
+  }, [user]);
 
   const handleLogout = () => {
     setUser(null);
