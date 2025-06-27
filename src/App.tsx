@@ -1,7 +1,9 @@
 // src/App.tsx
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import MainPage from './pages/MainPage';
@@ -34,18 +36,6 @@ interface Usuario {
   fotoPerfil?: string;
 }
 
-// Decodificar JWT para extraer el rol
-function getRoleFromToken(token: string | null): 'usuario' | 'admin' | null {
-  if (!token) return null;
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.rol || null;
-  } catch {
-    return null;
-  }
-}
-
-// Componente para proteger rutas solo para admin
 function AdminRoute({ user, children }: { user: Usuario | null; children: React.ReactNode }) {
   if (!user) return <Navigate to="/auth" />;
   if (user.rol !== 'admin') {
@@ -54,107 +44,104 @@ function AdminRoute({ user, children }: { user: Usuario | null; children: React.
   return <>{children}</>;
 }
 
-// Componente para proteger rutas autenticadas
 function ProtectedRoute({ user, children }: { user: Usuario | null; children: React.ReactNode }) {
   if (!user) return <Navigate to="/auth" />;
   return <>{children}</>;
 }
 
-function App() {
-  const [user, setUser] = useState<Usuario | null>(null);
-  
-  const handleAuthSuccess = ({ usuario , token }: { usuario: Usuario ;token: string }) => {
+function AppContent({ user, setUser }: { user: Usuario | null, setUser: React.Dispatch<React.SetStateAction<Usuario | null>> }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleNotificacion = (noti: any) => {
+      console.log("🔔 Notificación recibida:", noti);
+      Swal.fire({
+        title: '¡Tienes una nueva reserva!',
+        text: noti.mensaje,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Ver reservas',
+        cancelButtonText: 'Cerrar',
+        confirmButtonColor: '#557e35',
+        cancelButtonColor: '#ccc',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/reservas-de-mis-productos');
+        }
+      });
+    };
+
+    socket.on('notificacion:nueva', handleNotificacion);
+    return () => {
+      socket.off('notificacion:nueva', handleNotificacion);
+    };
+  }, [navigate]);
+
+  return (
+    <>
+      <Header user={user} onLogout={() => {
+        setUser(null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        delete axios.defaults.headers.common['Authorization'];
+      }} />
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<LandingPage onAuth={handleAuthSuccess} user={user} />} />
+          <Route path="/productos" element={<MainPage user={user} />} />
+          <Route path="/nosotros" element={<AboutUsPage />} />
+          <Route path="/como-funciona" element={<DocsPage />} />
+          <Route path="/auth" element={<AuthPage onAuthSuccess={handleAuthSuccess} />} />
+          <Route path="/perfil" element={<ProtectedRoute user={user}><ProfilePage user={user!} onLogout={() => setUser(null)} /></ProtectedRoute>} />
+          <Route path="/crear-producto" element={<ProtectedRoute user={user}><CreateProductPage /></ProtectedRoute>} />
+          <Route path="/productos/editar/:id_producto" element={<EditProductPage user={user} />} />
+          <Route path="/productos/:id_producto" element={<ProductDetailPage user={user} />} />
+          <Route path="/mis-reservas" element={<ProtectedRoute user={user}><MyReservationsPage /></ProtectedRoute>} />
+          <Route path="/perfil/editar" element={<ProtectedRoute user={user}><EditProfilePage user={user!} onProfileUpdate={setUser} /></ProtectedRoute>} />
+          <Route path="/usuarios/:id" element={<PublicProfilePage />} />
+          <Route path="/reservas-de-mis-productos" element={<ProtectedRoute user={user}><ReservasDeMisProductosPage /></ProtectedRoute>} />
+          <Route path="/producto/:id_producto/valoraciones" element={<ValoracionesPage />} />
+          <Route path="/productos/:id/valoraciones" element={<ValoracionesListPage />} />
+          <Route path="/admin-dashboard" element={<AdminRoute user={user}><AdminDashboardPage /></AdminRoute>} />
+        </Routes>
+      </main>
+      <Footer />
+    </>
+  );
+
+  function handleAuthSuccess({ usuario, token }: { usuario: Usuario; token: string }) {
     localStorage.setItem('token', token);
     localStorage.setItem('usuario', JSON.stringify(usuario));
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    console.log('Autenticación exitosa para:', usuario.nombre);
-    console.log('Datos del usuario recibidos en App:', usuario);
     setUser(usuario);
-  };
+  }
+}
 
-  // NUEVO: manejar perfil actualizado
-  const handleProfileUpdate = (usuario: Usuario) => {
-    setUser(usuario);
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-  };
+function App() {
+  const [user, setUser] = useState<Usuario | null>(null);
 
-  // Agregar un useEffect para cargar el usuario del localStorage al iniciar
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('usuario');
 
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      console.log('Token encontrado en localStorage:', token);
-    }  
+    }
 
     if (storedUser) {
-      const parsed = JSON.parse(storedUser);
-      console.log('Usuario encontrado en localStorage:', JSON.parse(storedUser));
-      setUser(parsed);
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
   useEffect(() => {
     if (user?.id_usuario) {
-      socket.emit('registrar_usuario', user.id_usuario); // 🔗 importante
+      socket.emit('registrar_usuario', user.id_usuario);
     }
   }, [user]);
 
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    delete axios.defaults.headers.common['Authorization'];
-  };
-
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        <Header user={user} onLogout={handleLogout} />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<LandingPage onAuth={handleAuthSuccess} user={user} />} />
-            <Route path="/productos" element={<MainPage user={user} />} />
-            <Route path="/nosotros" element={<AboutUsPage />} />
-            <Route path="/como-funciona" element={<DocsPage />} />
-            <Route path="/auth" element={<AuthPage onAuthSuccess={handleAuthSuccess} />} />
-            <Route 
-              path="/perfil" 
-              element={
-                <ProtectedRoute user={user}>
-                  <ProfilePage user={user!} onLogout={handleLogout} />
-                </ProtectedRoute>
-              }
-            />
-            <Route 
-              path="/crear-producto" 
-              element={
-                <ProtectedRoute user={user}>
-                  <CreateProductPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/productos/editar/:id_producto" element={<EditProductPage user={user} />} />
-            <Route path="/productos/:id_producto" element={<ProductDetailPage user={user} />} />
-            <Route path="/mis-reservas" element={<ProtectedRoute user={user}><MyReservationsPage /></ProtectedRoute>} />
-            <Route 
-              path="/perfil/editar"
-              element={
-                <ProtectedRoute user={user}>
-                  <EditProfilePage user={user!} onProfileUpdate={handleProfileUpdate} />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/usuarios/:id" element={<PublicProfilePage />} />
-            <Route path="/reservas-de-mis-productos" element={<ProtectedRoute user={user}><ReservasDeMisProductosPage /></ProtectedRoute>} />
-            <Route path="/producto/:id_producto/valoraciones" element={<ValoracionesPage />} />
-            <Route path="/productos/:id/valoraciones" element={<ValoracionesListPage />} />
-            <Route path="/admin-dashboard" element={<AdminRoute user={user}><AdminDashboardPage /></AdminRoute>} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <AppContent user={user} setUser={setUser} />
     </Router>
   );
 }

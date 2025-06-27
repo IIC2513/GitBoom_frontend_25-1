@@ -204,31 +204,31 @@ const MainPage: React.FC<MainPageProps> = ({ user }) => {
     };
   }, []);
 
-  useEffect(() => {
-    const handleNuevaNotificacion = (noti: any) => {
-      console.log("🔔 Notificación recibida:", noti);
+  // useEffect(() => {
+  //   const handleNuevaNotificacion = (noti: any) => {
+  //     console.log("🔔 Notificación recibida:", noti);
   
-      Swal.fire({
-        title: '¡Tienes una nueva reserva!',
-        text: noti.mensaje,
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: 'Ver reservas',
-        cancelButtonText: 'Cerrar',
-        confirmButtonColor: '#557e35',
-        cancelButtonColor: '#ccc',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/reservas-de-mis-productos');
-        }
-      });
-    };
+  //     Swal.fire({
+  //       title: '¡Tienes una nueva reserva!',
+  //       text: noti.mensaje,
+  //       icon: 'info',
+  //       showCancelButton: true,
+  //       confirmButtonText: 'Ver reservas',
+  //       cancelButtonText: 'Cerrar',
+  //       confirmButtonColor: '#557e35',
+  //       cancelButtonColor: '#ccc',
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         navigate('/reservas-de-mis-productos');
+  //       }
+  //     });
+  //   };
   
-    socket.on("notificacion:nueva", handleNuevaNotificacion);
-    return () => {
-      socket.off("notificacion:nueva", handleNuevaNotificacion);
-    };
-  }, [navigate]);
+  //   socket.on("notificacion:nueva", handleNuevaNotificacion);
+  //   return () => {
+  //     socket.off("notificacion:nueva", handleNuevaNotificacion);
+  //   };
+  // }, [navigate]);
   
   
   
