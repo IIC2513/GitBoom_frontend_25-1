@@ -21,7 +21,7 @@ const sampleProducts = [
     cantidad: 5,
     estado: 'disponible',
     fechaPublicacion: '2024-01-15',
-    fechaVencimiento: '2024-01-20'
+    fechaVencimiento: '2026-12-31'
   },
   { 
     id: 2, 
@@ -34,7 +34,7 @@ const sampleProducts = [
     cantidad: 2,
     estado: 'disponible',
     fechaPublicacion: '2024-01-14',
-    fechaVencimiento: '2024-01-18'
+    fechaVencimiento: '2026-12-31'
   },
   { 
     id: 3, 
@@ -47,7 +47,7 @@ const sampleProducts = [
     cantidad: 1,
     estado: 'disponible',
     fechaPublicacion: '2024-01-15',
-    fechaVencimiento: '2024-01-16'
+    fechaVencimiento: '2026-12-31'
   },
   { 
     id: 4, 
@@ -60,7 +60,7 @@ const sampleProducts = [
     cantidad: 8,
     estado: 'disponible',
     fechaPublicacion: '2024-01-13',
-    fechaVencimiento: '2024-01-17'
+    fechaVencimiento: '2026-12-31'
   },
   { 
     id: 5, 
@@ -73,7 +73,7 @@ const sampleProducts = [
     cantidad: 3,
     estado: 'disponible',
     fechaPublicacion: '2024-01-14',
-    fechaVencimiento: '2024-01-21'
+    fechaVencimiento: '2026-12-31'
   },
   { 
     id: 6, 
@@ -86,7 +86,7 @@ const sampleProducts = [
     cantidad: 4,
     estado: 'disponible',
     fechaPublicacion: '2024-01-15',
-    fechaVencimiento: '2024-01-19'
+    fechaVencimiento: '2026-12-31'
   },
 ];
 
