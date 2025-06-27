@@ -19,6 +19,7 @@ import ReservasDeMisProductosPage from './pages/ReservasDeMisProductosPage';
 import ValoracionesPage from './pages/ValoracionesPage';
 import ValoracionesListPage from './pages/ValoracionesListPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import UserPublicProfilePage from './pages/UserPublicProfilePage';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -138,6 +139,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/usuarios/:id" element={<UserPublicProfilePage />} />
             <Route path="/reservas-de-mis-productos" element={<ProtectedRoute user={user}><ReservasDeMisProductosPage /></ProtectedRoute>} />
             <Route path="/producto/:id_producto/valoraciones" element={<ValoracionesPage />} />
             <Route path="/productos/:id/valoraciones" element={<ValoracionesListPage />} />

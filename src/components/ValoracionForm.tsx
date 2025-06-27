@@ -5,43 +5,19 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
 
 interface Props {
   id_producto: string;
+  id_reserva: string;
+  onSuccess?: () => void;
 }
 
-const ValoracionForm: React.FC<Props> = ({ id_producto }) => {
+const ValoracionForm: React.FC<Props> = ({ id_producto, id_reserva, onSuccess }) => {
   const [comentario, setComentario] = useState('');
   const [puntuacion, setPuntuacion] = useState(5);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-  const [idReservaValida, setIdReservaValida] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchReserva = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_BASE}/api/reservas/mis`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const reservas = response.data;
-        const reservaEncontrada = reservas.find((res: any) => res.id_producto === id_producto);
-
-        if (reservaEncontrada) {
-          setIdReservaValida(reservaEncontrada.id_reserva);
-        } else {
-          setError('No tienes una reserva válida para este producto.');
-        }
-      } catch (err) {
-        console.error('Error al obtener reserva:', err);
-        setError('No se pudo verificar tu reserva.');
-      }
-    };
-
-    fetchReserva();
-  }, [id_producto]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!idReservaValida) {
+    if (!id_reserva) {
       setError('No se encontró una reserva válida.');
       return;
     }
@@ -52,7 +28,7 @@ const ValoracionForm: React.FC<Props> = ({ id_producto }) => {
         comentario,
         puntuacion,
         id_producto,
-        id_reserva: idReservaValida,
+        id_reserva,
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -60,21 +36,25 @@ const ValoracionForm: React.FC<Props> = ({ id_producto }) => {
       setSuccess(true);
       setComentario('');
       setPuntuacion(5);
+
+      if (onSuccess) onSuccess();
+
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+
     } catch (err) {
       console.error(err);
       setError('Error al enviar valoración.');
     }
   };
 
-  if (error) {
-    return <div className="mt-4 text-red-600">{error}</div>;
-  }
-
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-y-4 bg-white shadow p-4 rounded-md">
       <h3 className="text-lg font-bold text-[#1d311e]">Deja tu valoración</h3>
 
       {success && <p className="text-green-600">¡Valoración enviada con éxito!</p>}
+      {error && <p className="text-red-600">{error}</p>}
 
       <div>
         <label className="block text-sm font-medium">Comentario</label>
@@ -98,4 +78,3 @@ const ValoracionForm: React.FC<Props> = ({ id_producto }) => {
 };
 
 export default ValoracionForm;
-
